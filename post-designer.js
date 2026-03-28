@@ -640,5 +640,6 @@ function quickStart() {
 
 // ---- Init ----
 initTheme();
+if (window.SoraUI) SoraUI.initSidebar();
 setCanvasSize(1080, 1080);
 quickStart();

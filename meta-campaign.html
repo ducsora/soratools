@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SoraTools – Meta Campaign Creator</title>
+  <meta name="description" content="Tạo chiến dịch Meta Ads mới theo từng bước – Campaign, Ad Set, Creative, Ad – trực tiếp qua Meta Ads API.">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="meta-campaign.css">
+  <script>(function(){var t=localStorage.getItem('theme');if(t==='dark'||!t){document.documentElement.setAttribute('data-theme','dark');}})();</script>
+</head>
+<body>
+<div class="app-layout">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo"><i class="fa-solid fa-layer-group"></i><span>SoraTools</span></div>
+    </div>
+    <div class="nav-section">
+      <p class="nav-label">Bộ công cụ</p>
+      <nav class="nav-menu">
+        <a href="personal.html"       data-perm="personal"  class="nav-item nav-item-personal"><i class="fa-solid fa-user"></i><span>Cá nhân</span></a>
+        <a href="chat.html"           data-perm="chat"      class="nav-item nav-item-ai"><i class="fa-solid fa-robot"></i><span>Chat với AI</span></a>
+        <a href="ads-report.html"     data-perm="ads"       class="nav-item nav-item-ads"><i class="fa-solid fa-chart-column"></i><span>Báo cáo Ads</span></a>
+        <a href="meta-budget.html"    data-perm="meta"      class="nav-item nav-item-meta"><i class="fa-brands fa-meta"></i><span>Meta Budget</span></a>
+        <a href="meta-campaign.html"  data-perm="meta"      class="nav-item nav-item-campaign active"><i class="fa-solid fa-rocket"></i><span>Campaign Creator</span></a>
+        <a href="research.html"       data-perm="research"  class="nav-item nav-item-research"><i class="fa-solid fa-magnifying-glass-chart"></i><span>Product Research</span></a>
+        <a href="post-designer.html"  data-perm="designer"  class="nav-item nav-item-designer"><i class="fa-solid fa-pen-ruler"></i><span>Post Designer</span></a>
+      </nav>
+      <p class="nav-label" style="margin-top:1.5rem" id="admin-nav-section">Quản trị</p>
+      <nav class="nav-menu">
+        <a href="admin.html" data-perm="admin" class="nav-item nav-item-admin"><i class="fa-solid fa-shield-halved"></i><span>Quản lý tài khoản</span></a>
+      </nav>
+    </div>
+    <div class="sidebar-footer">
+      <div class="user-widget" id="user-widget">
+        <div class="user-avatar" id="sidebar-avatar">🦊</div>
+        <div class="user-info">
+          <div class="user-name" id="sidebar-name">Người dùng</div>
+          <div class="user-role" id="sidebar-username">@username</div>
+        </div>
+        <button class="user-menu-btn" id="user-menu-toggle"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+      </div>
+      <div class="user-dropdown" id="user-dropdown">
+        <div id="sidebar-role-badge" style="padding:.3rem .5rem;margin-bottom:.3rem"></div>
+        <div class="sep-thin"></div>
+        <button class="logout-btn" onclick="AuthGuard.logout()"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</button>
+      </div>
+      <div class="theme-toggle" id="theme-toggle"><i class="fa-solid fa-moon"></i><span>Chế độ Tối</span></div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="workspace">
+
+      <!-- Page Header -->
+      <div class="mc-header">
+        <div>
+          <h1><i class="fa-solid fa-rocket"></i> Meta Campaign Creator</h1>
+          <p>Tạo chiến dịch quảng cáo mới theo workflow 4 bước chuẩn Meta Ads API</p>
+        </div>
+        <div class="header-actions">
+          <button class="btn-ghost-sm" id="mc-settings-btn"><i class="fa-solid fa-gear"></i> Cấu hình API</button>
+          <button class="btn-ghost-sm" id="mc-history-btn"><i class="fa-solid fa-clock-rotate-left"></i> Lịch sử</button>
+        </div>
+      </div>
+
+      <!-- Connect Banner (shown when no API config) -->
+      <div class="mb-connect-banner" id="mc-connect-banner">
+        <div class="mb-connect-inner">
+          <div class="mb-connect-icon"><i class="fa-solid fa-rocket"></i></div>
+          <h3>Bắt đầu tạo chiến dịch mới</h3>
+          <p>Thiết lập Access Token, Ad Account ID và Page ID để tạo campaign trực tiếp qua Meta Ads API.</p>
+          <button class="btn-primary" id="mc-open-config-btn"><i class="fa-solid fa-plug"></i> Thiết lập kết nối</button>
+        </div>
+      </div>
+
+      <!-- Wizard (shown after config) -->
+      <div id="mc-wizard" style="display:none">
+
+        <!-- Progress Stepper -->
+        <div class="mc-stepper" id="mc-stepper">
+          <div class="mc-step active" data-step="1">
+            <div class="step-circle"><i class="fa-solid fa-flag"></i></div>
+            <div class="step-info">
+              <span class="step-num">Bước 1</span>
+              <span class="step-name">Campaign</span>
+            </div>
+          </div>
+          <div class="step-line"></div>
+          <div class="mc-step" data-step="2">
+            <div class="step-circle"><i class="fa-solid fa-layer-group"></i></div>
+            <div class="step-info">
+              <span class="step-num">Bước 2</span>
+              <span class="step-name">Ad Set</span>
+            </div>
+          </div>
+          <div class="step-line"></div>
+          <div class="mc-step" data-step="3">
+            <div class="step-circle"><i class="fa-solid fa-image"></i></div>
+            <div class="step-info">
+              <span class="step-num">Bước 3</span>
+              <span class="step-name">Creative</span>
+            </div>
+          </div>
+          <div class="step-line"></div>
+          <div class="mc-step" data-step="4">
+            <div class="step-circle"><i class="fa-solid fa-rectangle-ad"></i></div>
+            <div class="step-info">
+              <span class="step-num">Bước 4</span>
+              <span class="step-name">Ad &amp; Hoàn tất</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step Panels -->
+
+        <!-- ── Step 1: Campaign ── -->
+        <div class="mc-panel" id="panel-1">
+          <div class="panel-header">
+            <div class="panel-icon step1"><i class="fa-solid fa-flag"></i></div>
+            <div>
+              <h2>Tạo Campaign</h2>
+              <p>Định nghĩa mục tiêu và cấu hình cơ bản cho chiến dịch quảng cáo</p>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Tên Campaign <span class="req">*</span></label>
+              <input type="text" id="c-name" placeholder="VD: Sales_PH_Tháng4_2025">
+              <small>Gợi ý: <span class="hint-tag" onclick="autoName()">Tự động đặt tên</span></small>
+            </div>
+            <div class="form-group">
+              <label>Mục tiêu Campaign <span class="req">*</span></label>
+              <select id="c-objective">
+                <option value="OUTCOME_SALES" selected>🛒 Doanh số (Sales)</option>
+                <option value="OUTCOME_TRAFFIC">🌐 Lưu lượng (Traffic)</option>
+                <option value="OUTCOME_LEADS">📋 Khách hàng tiềm năng (Leads)</option>
+                <option value="OUTCOME_AWARENESS">📣 Nhận thức thương hiệu</option>
+                <option value="OUTCOME_ENGAGEMENT">💬 Tương tác (Engagement)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Danh mục quảng cáo đặc biệt</label>
+              <select id="c-special">
+                <option value="NONE" selected>Không có (NONE)</option>
+                <option value="EMPLOYMENT">Việc làm</option>
+                <option value="HOUSING">Nhà ở</option>
+                <option value="CREDIT">Tín dụng</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Trạng thái khởi tạo</label>
+              <select id="c-status">
+                <option value="PAUSED" selected>⏸ Tạm dừng (khuyến nghị)</option>
+                <option value="ACTIVE">▶ Kích hoạt ngay</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="panel-footer">
+            <div></div>
+            <button class="btn-primary" id="btn-step1-next"><i class="fa-solid fa-arrow-right"></i> Tiếp theo: Ad Set</button>
+          </div>
+        </div>
+
+        <!-- ── Step 2: Ad Set ── -->
+        <div class="mc-panel" id="panel-2" style="display:none">
+          <div class="panel-header">
+            <div class="panel-icon step2"><i class="fa-solid fa-layer-group"></i></div>
+            <div>
+              <h2>Cấu hình Ad Set</h2>
+              <p>Thiết lập ngân sách, lịch chạy, đối tượng mục tiêu và tối ưu hóa</p>
+            </div>
+          </div>
+
+          <!-- Budget & Schedule -->
+          <div class="section-divider"><span>💰 Ngân sách &amp; Lịch chạy</span></div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Ngân sách ngày (₫) <span class="req">*</span></label>
+              <div class="budget-input-wrap">
+                <input type="number" id="as-budget" placeholder="200000" value="200000" step="10000" min="10000">
+                <span class="budget-unit">VND</span>
+              </div>
+              <small>Tối thiểu ~50.000 VND / ngày</small>
+            </div>
+            <div class="form-group">
+              <label>Lịch bắt đầu chạy <span class="req">*</span></label>
+              <select id="as-schedule">
+                <option value="NOW" selected>▶ Chạy ngay lập tức</option>
+                <option value="TOMORROW">🌙 00:00 ngày mai</option>
+                <option value="CUSTOM">📅 Tùy chọn thời gian</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group" id="as-custom-time-wrap" style="display:none">
+            <label>Thời điểm bắt đầu tùy chọn</label>
+            <input type="datetime-local" id="as-custom-time">
+          </div>
+
+          <!-- Targeting -->
+          <div class="section-divider"><span>🎯 Đối tượng mục tiêu</span></div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Quốc gia / vùng địa lý <span class="req">*</span></label>
+              <select id="as-location">
+                <option value="PH_ALL" selected>🇵🇭 Philippines – Toàn quốc</option>
+                <option value="PH_EX">🇵🇭 Philippines – Trừ vùng sâu</option>
+                <option value="VN">🇻🇳 Việt Nam</option>
+                <option value="ID">🇮🇩 Indonesia</option>
+                <option value="TH">🇹🇭 Thailand</option>
+                <option value="MY">🇲🇾 Malaysia</option>
+                <option value="US">🇺🇸 Hoa Kỳ</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Placement (vị trí hiển thị)</label>
+              <select id="as-placement">
+                <option value="ALL" selected>Tất cả (Facebook, IG, Messenger, AN)</option>
+                <option value="FB_ONLY">Chỉ Facebook</option>
+                <option value="FB_IG">Facebook + Instagram</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Excluded regions info box (shown when PH_EX selected) -->
+          <div class="info-box" id="as-excluded-info" style="display:none">
+            <i class="fa-solid fa-circle-info"></i>
+            <div>
+              <strong>Sẽ loại trừ các vùng:</strong>
+              <span>Batanes, Lanao del Sur, Sulu, Tawi-Tawi, Maguindanao, North Cotabato</span>
+            </div>
+          </div>
+
+          <!-- Optimization -->
+          <div class="section-divider"><span>⚡ Tối ưu hóa &amp; Giá thầu</span></div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Chiến lược giá thầu</label>
+              <select id="as-bid">
+                <option value="LOWEST_COST_WITHOUT_CAP" selected>Tối ưu chi phí (Không giới hạn)</option>
+                <option value="LOWEST_COST_WITH_BID_CAP">Tối ưu chi phí (Có giới hạn)</option>
+                <option value="COST_CAP">Giới hạn chi phí trên mỗi kết quả</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Mục tiêu tối ưu <span class="req">*</span></label>
+              <select id="as-optgoal">
+                <option value="OFFSITE_CONVERSIONS" selected>🛒 Chuyển đổi Website (Purchase)</option>
+                <option value="LINK_CLICKS">🔗 Lượt nhấp liên kết</option>
+                <option value="REACH">👁 Tiếp cận</option>
+                <option value="IMPRESSIONS">📺 Lượt hiển thị</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Pixel config (shown when conversion selected) -->
+          <div id="as-pixel-wrap">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Pixel ID <span class="req">*</span></label>
+                <input type="text" id="as-pixel" placeholder="Pixel ID từ cấu hình API">
+                <small id="as-pixel-hint" style="color:#22c55e"></small>
+              </div>
+              <div class="form-group">
+                <label>Sự kiện chuyển đổi</label>
+                <select id="as-event">
+                  <optgroup label="🛒 Mua sắm & Thanh toán">
+                    <option value="PURCHASE" selected>Lượt mua (Purchase)</option>
+                    <option value="ADD_TO_CART">Thêm vào giỏ hàng (Add to Cart)</option>
+                    <option value="INITIATE_CHECKOUT">Bắt đầu thanh toán (Initiate Checkout)</option>
+                    <option value="ADD_PAYMENT_INFO">Thêm thông tin thanh toán (Add Payment Info)</option>
+                    <option value="ADD_TO_WISHLIST">Thêm vào yêu thích (Add to Wishlist)</option>
+                  </optgroup>
+                  <optgroup label="📋 Đăng ký & Khách hàng tiềm năng">
+                    <option value="COMPLETE_REGISTRATION">Hoàn tất đăng ký (Complete Registration)</option>
+                    <option value="LEAD">Khách hàng tiềm năng (Lead)</option>
+                    <option value="SUBMIT_APPLICATION">Nộp đơn đăng ký (Submit Application)</option>
+                    <option value="SUBSCRIBE">Đăng ký (Subscribe)</option>
+                    <option value="START_TRIAL">Bắt đầu dùng thử (Start Trial)</option>
+                  </optgroup>
+                  <optgroup label="👁 Khám phá & Tương tác">
+                    <option value="VIEW_CONTENT">Xem nội dung (View Content)</option>
+                    <option value="SEARCH">Tìm kiếm (Search)</option>
+                    <option value="CONTACT">Liên hệ (Contact)</option>
+                    <option value="FIND_LOCATION">Tìm địa điểm (Find Location)</option>
+                    <option value="SCHEDULE">Đặt lịch hẹn (Schedule)</option>
+                  </optgroup>
+                  <optgroup label="🎯 Khác">
+                    <option value="CUSTOMIZE_PRODUCT">Tùy chỉnh sản phẩm (Customize Product)</option>
+                    <option value="DONATE">Quyên góp (Donate)</option>
+                    <option value="OTHER">Sự kiện tùy chỉnh khác</option>
+                  </optgroup>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel-footer">
+            <button class="btn-ghost" id="btn-step2-back"><i class="fa-solid fa-arrow-left"></i> Quay lại</button>
+            <button class="btn-primary" id="btn-step2-next"><i class="fa-solid fa-arrow-right"></i> Tiếp theo: Creative</button>
+          </div>
+        </div>
+
+        <!-- ── Step 3: Creative ── -->
+        <div class="mc-panel" id="panel-3" style="display:none">
+          <div class="panel-header">
+            <div class="panel-icon step3"><i class="fa-solid fa-image"></i></div>
+            <div>
+              <h2>Thiết kế Ad Creative</h2>
+              <p>Mỗi file tải lên sẽ tạo thành 1 Ad Set riêng biệt trong cùng 1 Campaign</p>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Tên Creative <span class="req">*</span></label>
+            <input type="text" id="cr-name" placeholder="VD: Creative_Sales_Web_001" value="Creative_Sales_Web_001">
+          </div>
+
+          <div class="section-divider"><span>📎 Tài nguyên quảng cáo</span></div>
+
+          <!-- Media type toggle -->
+          <div class="media-type-tabs">
+            <button type="button" class="media-tab active" id="tab-image" onclick="switchMediaType('image')">
+              <i class="fa-solid fa-image"></i> Hình ảnh
+            </button>
+            <button type="button" class="media-tab" id="tab-video" onclick="switchMediaType('video')">
+              <i class="fa-solid fa-film"></i> Video
+            </button>
+          </div>
+
+          <!-- Upload area -->
+          <div class="media-upload-area">
+            <input type="file" id="cr-media-file" accept="image/jpeg,image/png,image/gif,image/webp" multiple hidden>
+
+            <!-- Dropzone (default) -->
+            <div class="upload-dropzone" id="upload-dropzone">
+              <div class="upload-drop-icon"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+              <p class="upload-drop-title">Kéo thả nhiều files vào đây</p>
+              <p class="upload-drop-sub" id="upload-drop-hint">Hỗ trợ: JPG, PNG, GIF, WEBP · Tối đa 30MB</p>
+              <button type="button" class="btn-ghost-sm" onclick="document.getElementById('cr-media-file').click()">
+                <i class="fa-solid fa-folder-open"></i> Chọn files
+              </button>
+            </div>
+
+            <!-- Preview (after files selected) -->
+            <div class="upload-preview" id="upload-preview" style="display:none">
+              <div class="preview-media-list" id="preview-media-list" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;"></div>
+              
+              <div class="preview-actions" style="display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+                <div class="preview-info-text">
+                  <strong id="preview-count">0 files</strong> đã chọn
+                </div>
+                <div style="display:flex; gap: .5rem;">
+                  <button type="button" class="btn-ghost-sm" id="change-file-btn">
+                    <i class="fa-solid fa-folder-open"></i> Chọn lại files
+                  </button>
+                  <button type="button" class="btn-primary" id="upload-to-meta-btn">
+                    <i class="fa-solid fa-cloud-arrow-up"></i> Upload lên Meta
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Uploading progress -->
+            <div class="upload-progress-box" id="upload-progress-box" style="display:none">
+              <i class="fa-solid fa-spinner fa-spin"></i>
+              <span id="upload-progress-text">Đang upload...</span>
+            </div>
+
+            <!-- Upload success -->
+            <div class="upload-success-box" id="upload-success-box" style="display:none">
+              <div class="upload-success-left">
+                <div class="upload-success-icon"><i class="fa-solid fa-circle-check"></i></div>
+                <div>
+                  <div class="upload-success-label">Upload thành công!</div>
+                  <div class="upload-success-id" id="upload-success-id"></div>
+                </div>
+              </div>
+              <button type="button" class="btn-ghost-sm" id="re-upload-btn">
+                <i class="fa-solid fa-rotate"></i> Upload lại
+              </button>
+            </div>
+          </div>
+
+          <!-- Manual hash input (collapsible fallback) -->
+          <div class="manual-input-section">
+            <button type="button" class="manual-toggle-btn" id="manual-hash-toggle-btn" onclick="toggleManualHash()">
+              <i class="fa-solid fa-keyboard"></i> Nhập Hash / ID thủ công
+              <i class="fa-solid fa-chevron-down manual-chevron" id="manual-chevron"></i>
+            </button>
+            <div class="manual-hash-inputs" id="manual-hash-inputs" style="display:none">
+              <input type="text" id="cr-image-hash" placeholder="Image Hash (ảnh) hoặc Video ID (video)">
+              <small>Image hash: chuỗi hex từ Meta · Video ID: số nguyên từ API</small>
+            </div>
+          </div>
+
+          <!-- URL landing page -->
+          <div class="form-group" style="margin-top:1rem">
+            <label>URL landing page <span class="req">*</span></label>
+            <input type="url" id="cr-link" placeholder="https://yourwebsite.com/product">
+          </div>
+
+          <div class="form-group">
+            <label>Nội dung chính (Primary Text) <span class="req">*</span></label>
+            <textarea id="cr-message" rows="3" placeholder="Nhập nội dung quảng cáo của bạn tại đây..."></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Tiêu đề (Headline)</label>
+              <input type="text" id="cr-headline" placeholder="VD: Mua ngay – Ưu đãi có hạn!">
+            </div>
+            <div class="form-group">
+              <label>Call to Action (CTA)</label>
+              <select id="cr-cta">
+                <option value="SHOP_NOW" selected>🛒 Mua ngay (Shop Now)</option>
+                <option value="LEARN_MORE">Tìm hiểu thêm</option>
+                <option value="SIGN_UP">Đăng ký</option>
+                <option value="CONTACT_US">Liên hệ</option>
+                <option value="GET_OFFER">Nhận ưu đãi</option>
+                <option value="ORDER_NOW">Đặt hàng ngay</option>
+                <option value="GET_QUOTE">Nhận báo giá</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Mô tả (Description)</label>
+            <input type="text" id="cr-description" placeholder="Mô tả ngắn (không bắt buộc)">
+          </div>
+
+          <div class="panel-footer">
+            <button class="btn-ghost" id="btn-step3-back"><i class="fa-solid fa-arrow-left"></i> Quay lại</button>
+            <button class="btn-primary" id="btn-step3-next"><i class="fa-solid fa-arrow-right"></i> Tiếp theo: Hoàn tất</button>
+          </div>
+        </div>
+
+        <!-- ── Step 4: Final Review & Create ── -->
+        <div class="mc-panel" id="panel-4" style="display:none">
+          <div class="panel-header">
+            <div class="panel-icon step4"><i class="fa-solid fa-rectangle-ad"></i></div>
+            <div>
+              <h2>Xem lại &amp; Tạo Campaign</h2>
+              <p>Kiểm tra thông tin trước khi gửi lên Meta Ads API</p>
+            </div>
+          </div>
+
+          <!-- Summary Cards -->
+          <div class="review-grid" id="review-grid">
+            <!-- Populated by JS -->
+          </div>
+
+          <!-- Ad Name -->
+          <div class="section-divider"><span>🏷 Tên Ad</span></div>
+          <div class="form-group">
+            <label>Tên quảng cáo (Ad Name) <span class="req">*</span></label>
+            <input type="text" id="ad-name" placeholder="VD: Ad_Final_Sales_PH" value="Ad_Final_Sales_PH">
+          </div>
+
+          <!-- Execution Log -->
+          <div class="section-divider"><span>📋 Nhật ký thực thi</span></div>
+          <div class="mc-exec-log" id="mc-exec-log">
+            <div class="log-empty">Nhấn "Tạo Campaign" để bắt đầu quy trình...</div>
+          </div>
+
+          <div class="panel-footer">
+            <button class="btn-ghost" id="btn-step4-back"><i class="fa-solid fa-arrow-left"></i> Quay lại chỉnh sửa</button>
+            <button class="btn-primary btn-create" id="btn-create" ><i class="fa-solid fa-rocket"></i> Tạo Campaign ngay</button>
+          </div>
+        </div>
+
+      </div><!-- /mc-wizard -->
+
+    </div>
+  </main>
+</div>
+
+<!-- Modal: API Config -->
+<div class="modal" id="mc-config-modal">
+  <div class="modal-content modal-wide">
+    <span class="close-btn" id="mc-close-config">&times;</span>
+    <h2><i class="fa-solid fa-gear"></i> Cấu hình API</h2>
+
+    <div class="cfg-notice">
+      <i class="fa-solid fa-circle-info"></i>
+      <span>Cần System User Token với quyền <strong>ads_management</strong> và <strong>ads_read</strong>.
+      Lấy tại <a href="https://business.facebook.com/settings/system-users" target="_blank">Business Manager → System Users</a>.</span>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Access Token <span class="req">*</span></label>
+        <div style="position:relative">
+          <input type="password" id="mc-cfg-token" placeholder="EAAxxxxxxxx...">
+          <button type="button" onclick="toggleTokenVis()" class="pw-eye-btn" id="mc-token-eye"><i class="fa-solid fa-eye"></i></button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>API Version</label>
+        <select id="mc-cfg-version">
+          <option value="v22.0" selected>v22.0 (mới nhất)</option>
+          <option value="v21.0">v21.0</option>
+          <option value="v20.0">v20.0</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Ad Account ID <span class="req">*</span></label>
+        <input type="text" id="mc-cfg-account" placeholder="act_123456789">
+        <small>Dạng <code>act_XXXXXXXXX</code></small>
+      </div>
+      <div class="form-group">
+        <label>Page ID <span class="req">*</span></label>
+        <input type="text" id="mc-cfg-page" placeholder="123456789">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Pixel ID</label>
+        <input type="text" id="mc-cfg-pixel" placeholder="123456789 (tùy chọn)">
+        <small>Dùng cho chiến dịch tối ưu chuyển đổi</small>
+      </div>
+      <div class="form-group">
+        <label>Đơn vị tiền tệ</label>
+        <select id="mc-cfg-currency">
+          <option value="VND" selected>VND – Việt Nam Đồng</option>
+          <option value="PHP">PHP – Philippine Peso</option>
+          <option value="USD">USD – US Dollar</option>
+          <option value="IDR">IDR – Indonesian Rupiah</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-ghost" id="mc-cancel-config">Hủy</button>
+      <button class="btn-ghost-sm" id="mc-test-btn"><i class="fa-solid fa-plug"></i> Kiểm tra kết nối</button>
+      <button class="btn-primary" id="mc-save-config"><i class="fa-solid fa-floppy-disk"></i> Lưu cấu hình</button>
+    </div>
+    <div class="cfg-test-result" id="mc-test-result" style="display:none"></div>
+  </div>
+</div>
+
+<!-- Modal: History -->
+<div class="modal" id="mc-history-modal">
+  <div class="modal-content modal-wide">
+    <span class="close-btn" id="mc-close-history">&times;</span>
+    <h2><i class="fa-solid fa-clock-rotate-left"></i> Lịch sử tạo Campaign</h2>
+    <div id="history-list" style="margin-top:1rem"></div>
+    <div class="modal-actions">
+      <button class="btn-ghost-sm danger-btn" id="mc-clear-history"><i class="fa-solid fa-trash"></i> Xóa lịch sử</button>
+      <button class="btn-ghost" id="mc-close-history-btn">Đóng</button>
+    </div>
+  </div>
+</div>
+
+<!-- Success Modal -->
+<div class="modal" id="mc-success-modal">
+  <div class="modal-content" style="text-align:center;padding:3rem 2rem">
+    <div class="success-icon"><i class="fa-solid fa-circle-check"></i></div>
+    <h2 style="margin-bottom:.5rem">Chiến dịch đã được tạo!</h2>
+    <p style="color:var(--text-muted);margin-bottom:1.5rem" id="success-subtitle"></p>
+    <div class="success-ids" id="success-ids"></div>
+    <div class="modal-actions" style="justify-content:center;border:none;padding-top:1.5rem">
+      <button class="btn-ghost" id="mc-create-another"><i class="fa-solid fa-plus"></i> Tạo chiến dịch mới</button>
+      <button class="btn-primary" onclick="document.getElementById('mc-success-modal').classList.remove('active')">Đóng</button>
+    </div>
+  </div>
+</div>
+
+<script src="auth.js"></script>
+<script src="meta-campaign.js"></script>
+</body>
+</html>

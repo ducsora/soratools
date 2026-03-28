@@ -22,18 +22,34 @@
             <div class="nav-section">
                 <p class="nav-label">Bộ công cụ</p>
                 <nav class="nav-menu">
-                    <a href="personal.html"      class="nav-item nav-item-personal"><i class="fa-solid fa-user"></i><span>Cá nhân</span></a>
-                    <a href="chat.html"          class="nav-item nav-item-ai"><i class="fa-solid fa-robot"></i><span>Chat với AI</span></a>
-                    <a href="ads-report.html"    class="nav-item nav-item-ads"><i class="fa-solid fa-chart-column"></i><span>Báo cáo Ads</span></a>
-                    <a href="research.html"      class="nav-item nav-item-research active"><i class="fa-solid fa-magnifying-glass-chart"></i><span>Product Research</span></a>
-                    <a href="post-designer.html" class="nav-item nav-item-designer"><i class="fa-solid fa-pen-ruler"></i><span>Post Designer</span></a>
+                    <a href="personal.html"      data-perm="personal"  class="nav-item nav-item-personal"><i class="fa-solid fa-user"></i><span>Cá nhân</span></a>
+                    <a href="chat.html"          data-perm="chat"      class="nav-item nav-item-ai"><i class="fa-solid fa-robot"></i><span>Chat với AI</span></a>
+                    <a href="ads-report.html"    data-perm="ads"       class="nav-item nav-item-ads"><i class="fa-solid fa-chart-column"></i><span>Báo cáo Ads</span></a>
+                    <a href="meta-budget.html"   data-perm="meta"      class="nav-item nav-item-meta"><i class="fa-brands fa-meta"></i><span>Meta Budget</span></a>
+                    <a href="meta-campaign.html"  data-perm="meta"      class="nav-item nav-item-campaign"><i class="fa-solid fa-rocket"></i><span>Campaign Creator</span></a>
+                    <a href="research.html"      data-perm="research"  class="nav-item nav-item-research active"><i class="fa-solid fa-magnifying-glass-chart"></i><span>Product Research</span></a>
+                    <a href="post-designer.html" data-perm="designer"  class="nav-item nav-item-designer"><i class="fa-solid fa-pen-ruler"></i><span>Post Designer</span></a>
+                </nav>
+                <p class="nav-label" style="margin-top:1.5rem" id="admin-nav-section">Quản trị</p>
+                <nav class="nav-menu">
+                    <a href="admin.html" data-perm="admin" class="nav-item nav-item-admin"><i class="fa-solid fa-shield-halved"></i><span>Quản lý tài khoản</span></a>
                 </nav>
             </div>
             <div class="sidebar-footer">
-                <div class="theme-toggle" id="theme-toggle">
-                    <i class="fa-solid fa-moon"></i>
-                    <span>Chế độ Tối</span>
+                <div class="user-widget" id="user-widget">
+                    <div class="user-avatar" id="sidebar-avatar">🦊</div>
+                    <div class="user-info">
+                        <div class="user-name" id="sidebar-name">Người dùng</div>
+                        <div class="user-role" id="sidebar-username">@username</div>
+                    </div>
+                    <button class="user-menu-btn" id="user-menu-toggle"><i class="fa-solid fa-ellipsis-vertical"></i></button>
                 </div>
+                <div class="user-dropdown" id="user-dropdown">
+                    <div id="sidebar-role-badge" style="padding:.3rem .5rem;margin-bottom:.3rem"></div>
+                    <div class="sep-thin"></div>
+                    <button class="logout-btn" onclick="AuthGuard.logout()"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</button>
+                </div>
+                <div class="theme-toggle" id="theme-toggle"><i class="fa-solid fa-moon"></i><span>Chế độ Tối</span></div>
             </div>
         </aside>
 
@@ -229,6 +245,7 @@
         </div>
     </div>
 
+    <script src="auth.js"></script>
     <script src="research.js"></script>
 </body>
 </html>

@@ -351,4 +351,5 @@ clearBtn.addEventListener('click', () => {
 
 // ---- Init ----
 initTheme();
+if (window.SoraUI) SoraUI.initSidebar();
 updateStatusBar();

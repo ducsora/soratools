@@ -606,6 +606,7 @@ function fmtVNDShort(val) {
 // ---- Init ----
 function init() {
     initTheme();
+    if (window.SoraUI) SoraUI.initSidebar();
     config = loadConfig();
     if (config && config.sheetId && config.apiKey) loadData();
     else showState('connect');

@@ -321,3 +321,4 @@ document.getElementById('save-result-btn').addEventListener('click', () => {
 
 // ---- Init ----
 initTheme();
+if (window.SoraUI) SoraUI.initSidebar();

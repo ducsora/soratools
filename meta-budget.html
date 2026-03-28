@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SoraTools – Meta Ads Budget Manager</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="meta-budget.css">
+</head>
+<body>
+<div class="app-layout">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo"><i class="fa-solid fa-layer-group"></i><span>SoraTools</span></div>
+    </div>
+    <div class="nav-section">
+      <p class="nav-label">Bộ công cụ</p>
+      <nav class="nav-menu">
+        <a href="personal.html"      data-perm="personal"  class="nav-item nav-item-personal"><i class="fa-solid fa-user"></i><span>Cá nhân</span></a>
+        <a href="chat.html"          data-perm="chat"      class="nav-item nav-item-ai"><i class="fa-solid fa-robot"></i><span>Chat với AI</span></a>
+        <a href="ads-report.html"    data-perm="ads"       class="nav-item nav-item-ads"><i class="fa-solid fa-chart-column"></i><span>Báo cáo Ads</span></a>
+        <a href="meta-budget.html"   data-perm="meta"      class="nav-item nav-item-meta active"><i class="fa-brands fa-meta"></i><span>Meta Budget</span></a>
+        <a href="meta-campaign.html"  data-perm="meta"      class="nav-item nav-item-campaign"><i class="fa-solid fa-rocket"></i><span>Campaign Creator</span></a>
+        <a href="research.html"      data-perm="research"  class="nav-item nav-item-research"><i class="fa-solid fa-magnifying-glass-chart"></i><span>Product Research</span></a>
+        <a href="post-designer.html" data-perm="designer"  class="nav-item nav-item-designer"><i class="fa-solid fa-pen-ruler"></i><span>Post Designer</span></a>
+      </nav>
+      <p class="nav-label" style="margin-top:1.5rem" id="admin-nav-section">Quản trị</p>
+      <nav class="nav-menu">
+        <a href="admin.html" data-perm="admin" class="nav-item nav-item-admin"><i class="fa-solid fa-shield-halved"></i><span>Quản lý tài khoản</span></a>
+      </nav>
+    </div>
+    <div class="sidebar-footer">
+      <div class="user-widget" id="user-widget">
+        <div class="user-avatar" id="sidebar-avatar">🦊</div>
+        <div class="user-info">
+          <div class="user-name" id="sidebar-name">Người dùng</div>
+          <div class="user-role" id="sidebar-username">@username</div>
+        </div>
+        <button class="user-menu-btn" id="user-menu-toggle"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+      </div>
+      <div class="user-dropdown" id="user-dropdown">
+        <div id="sidebar-role-badge" style="padding:.3rem .5rem;margin-bottom:.3rem"></div>
+        <div class="sep-thin"></div>
+        <button class="logout-btn" onclick="AuthGuard.logout()"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</button>
+      </div>
+      <div class="theme-toggle" id="theme-toggle"><i class="fa-solid fa-moon"></i><span>Chế độ Tối</span></div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="workspace">
+
+      <!-- Header -->
+      <div class="mb-header">
+        <div>
+          <h2><i class="fa-brands fa-meta"></i> Meta Ads Budget Manager</h2>
+          <p id="mb-status-bar">Kết nối Meta Ads API để quản lý ngân sách campaigns</p>
+        </div>
+        <div class="header-actions">
+          <button class="btn-ghost-sm" id="mb-refresh-btn" disabled>
+            <i class="fa-solid fa-rotate-right"></i> Làm mới
+          </button>
+          <button class="btn-ghost-sm" id="mb-settings-btn">
+            <i class="fa-solid fa-gear"></i> Cấu hình API
+          </button>
+          <button class="btn-primary" id="mb-auto-btn" disabled>
+            <i class="fa-solid fa-wand-magic-sparkles"></i> Tự động tối ưu
+          </button>
+        </div>
+      </div>
+
+      <!-- Connect banner -->
+      <div class="mb-connect-banner" id="mb-connect-banner">
+        <div class="mb-connect-inner">
+          <div class="mb-connect-icon"><i class="fa-brands fa-meta"></i></div>
+          <h3>Kết nối với Meta Ads API</h3>
+          <p>Nhập Access Token và Ad Account ID để xem campaigns và quản lý ngân sách.</p>
+          <button class="btn-primary" id="mb-open-config-btn"><i class="fa-solid fa-plug"></i> Thiết lập kết nối</button>
+        </div>
+      </div>
+
+      <!-- Dashboard (hidden until loaded) -->
+      <div id="mb-dashboard" style="display:none">
+
+        <!-- Summary KPIs -->
+        <div class="mb-kpi-grid" id="mb-kpi-grid">
+          <div class="mb-kpi-card">
+            <div class="mb-kpi-icon spend"><i class="fa-solid fa-money-bill-wave"></i></div>
+            <div class="mb-kpi-info"><p>Tổng Chi tiêu hôm nay</p><h3 id="kpi-spend">—</h3></div>
+          </div>
+          <div class="mb-kpi-card">
+            <div class="mb-kpi-icon roas"><i class="fa-solid fa-chart-line"></i></div>
+            <div class="mb-kpi-info"><p>ROAS trung bình</p><h3 id="kpi-roas">—</h3></div>
+          </div>
+          <div class="mb-kpi-card">
+            <div class="mb-kpi-icon active"><i class="fa-solid fa-circle-play"></i></div>
+            <div class="mb-kpi-info"><p>Campaigns đang chạy</p><h3 id="kpi-active">—</h3></div>
+          </div>
+          <div class="mb-kpi-card">
+            <div class="mb-kpi-icon budget"><i class="fa-solid fa-sack-dollar"></i></div>
+            <div class="mb-kpi-info"><p>Tổng Ngân sách ngày</p><h3 id="kpi-budget">—</h3></div>
+          </div>
+        </div>
+
+        <!-- Smart Rules Bar -->
+        <div class="smart-rules-bar" id="smart-rules-bar">
+          <div class="sr-left">
+            <i class="fa-solid fa-wand-magic-sparkles sr-icon"></i>
+            <div>
+              <div class="sr-title">Quy tắc Tự động</div>
+              <div class="sr-desc">Tự động tăng/giảm ngân sách dựa trên ROAS mục tiêu</div>
+            </div>
+          </div>
+          <div class="sr-controls">
+            <label class="sr-label">ROAS mục tiêu</label>
+            <input type="number" id="sr-roas-target" value="2.5" step="0.1" min="0.1" class="sr-input">
+            <label class="sr-label">Tăng khi ROAS ≥ target</label>
+            <input type="number" id="sr-scale-up" value="20" min="1" max="100" class="sr-input sr-pct"><span class="sr-unit">%</span>
+            <label class="sr-label">Giảm khi ROAS &lt; target</label>
+            <input type="number" id="sr-scale-down" value="20" min="1" max="100" class="sr-input sr-pct"><span class="sr-unit">%</span>
+            <label class="sr-label">Giới hạn ngân sách tối đa</label>
+            <input type="number" id="sr-budget-cap" value="5000000" step="100000" class="sr-input sr-wide">
+            <span class="sr-unit">₫</span>
+          </div>
+        </div>
+
+        <!-- Toolbar -->
+        <div class="mb-toolbar">
+          <div class="mb-search-wrap">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="mb-search" placeholder="Tìm campaign...">
+          </div>
+          <div class="mb-filters">
+            <select id="mb-filter-status" class="mb-select">
+              <option value="">Tất cả trạng thái</option>
+              <option value="ACTIVE">🟢 Đang chạy</option>
+              <option value="PAUSED">⏸ Tạm dừng</option>
+            </select>
+            <select id="mb-filter-roas" class="mb-select">
+              <option value="">Lọc theo ROAS</option>
+              <option value="good">✅ ROAS tốt (≥ target)</option>
+              <option value="bad">⚠️ ROAS thấp (&lt; target)</option>
+            </select>
+          </div>
+          <div class="mb-bulk-actions">
+            <span id="mb-selected-count" class="sel-count" style="display:none">0 đã chọn</span>
+            <button class="btn-ghost-sm" id="mb-bulk-up" style="display:none"><i class="fa-solid fa-arrow-trend-up"></i> Tăng NS</button>
+            <button class="btn-ghost-sm" id="mb-bulk-down" style="display:none"><i class="fa-solid fa-arrow-trend-down"></i> Giảm NS</button>
+            <button class="btn-ghost-sm" id="mb-select-all-btn"><i class="fa-solid fa-check-double"></i> Chọn tất cả</button>
+          </div>
+        </div>
+
+        <!-- Campaign table -->
+        <div class="mb-table-wrap">
+          <table class="mb-table" id="mb-table">
+            <thead>
+              <tr>
+                <th><input type="checkbox" id="mb-chk-all"></th>
+                <th>Campaign</th>
+                <th>Trạng thái</th>
+                <th>Chi tiêu hôm nay</th>
+                <th>ROAS</th>
+                <th>CPC</th>
+                <th>Lượt chuyển đổi</th>
+                <th>Ngân sách ngày</th>
+                <th>Điều chỉnh nhanh</th>
+                <th>Thao tác</th>
+              </tr>
+            </thead>
+            <tbody id="mb-tbody"></tbody>
+          </table>
+        </div>
+
+        <!-- Execution Log -->
+        <div class="exec-log-section">
+          <div class="exec-log-header">
+            <div><i class="fa-solid fa-clock-rotate-left"></i> Nhật ký thực thi</div>
+            <button class="btn-ghost-sm" id="clear-log-btn"><i class="fa-solid fa-trash"></i> Xóa log</button>
+          </div>
+          <div class="exec-log" id="exec-log">
+            <div class="log-empty">Chưa có thao tác nào được thực hiện.</div>
+          </div>
+        </div>
+
+      </div><!-- /dashboard -->
+
+      <!-- Loading -->
+      <div class="mb-loading" id="mb-loading" style="display:none">
+        <div class="spinner"></div>
+        <p>Đang tải dữ liệu từ Meta Ads API...</p>
+      </div>
+
+      <!-- Error -->
+      <div class="mb-error" id="mb-error" style="display:none">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <p id="mb-error-msg">Không thể kết nối API.</p>
+        <button class="btn-primary" onclick="loadCampaigns()">Thử lại</button>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- Modal: API Config -->
+<div class="modal" id="config-modal">
+  <div class="modal-content modal-wide">
+    <span class="close-btn" id="close-config-btn">&times;</span>
+    <h2><i class="fa-brands fa-meta"></i> Cấu hình Meta Ads API</h2>
+
+    <div class="cfg-notice">
+      <i class="fa-solid fa-circle-info"></i>
+      <span>Cần System User Token với quyền <strong>ads_management</strong> và <strong>ads_read</strong>. 
+      Lấy tại <a href="https://business.facebook.com/settings/system-users" target="_blank">Business Manager → System Users</a>.</span>
+    </div>
+
+    <div class="form-group">
+      <label>Access Token</label>
+      <div style="position:relative">
+        <input type="password" id="cfg-token" placeholder="EAAxxxxxxxx...">
+        <button type="button" onclick="toggleVis('cfg-token','cfg-token-eye')" class="pw-eye-btn" id="cfg-token-eye"><i class="fa-solid fa-eye"></i></button>
+      </div>
+      <small>System User Token (lâu dài) — không dùng User Token ngắn hạn!</small>
+    </div>
+    <div class="form-group">
+      <label>Ad Account ID(s)</label>
+      <input type="text" id="cfg-account" placeholder="act_123, act_456">
+      <small>Dạng <code>act_XXXXXXXXX</code>. Nhập <strong>nhiều ID</strong> thì cách nhau bằng dấu phẩy (,)</small>
+    </div>
+    <div class="form-group">
+      <label>API Version</label>
+      <select id="cfg-version">
+        <option value="v22.0" selected>v22.0 (mới nhất)</option>
+        <option value="v21.0">v21.0</option>
+        <option value="v20.0">v20.0</option>
+        <option value="v19.0">v19.0</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Đơn vị tiền tệ</label>
+      <select id="cfg-currency">
+        <option value="VND" selected>VND – Việt Nam Đồng</option>
+        <option value="USD">USD – US Dollar</option>
+        <option value="PHP">PHP – Philippine Peso</option>
+        <option value="IDR">IDR – Indonesian Rupiah</option>
+      </select>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-ghost" id="cancel-config-btn">Hủy</button>
+      <button class="btn-ghost-sm" id="test-conn-btn"><i class="fa-solid fa-plug"></i> Kiểm tra kết nối</button>
+      <button class="btn-primary" id="save-config-btn"><i class="fa-solid fa-floppy-disk"></i> Lưu & Tải dữ liệu</button>
+    </div>
+    <div class="cfg-test-result" id="cfg-test-result" style="display:none"></div>
+  </div>
+</div>
+
+<!-- Modal: Edit Budget -->
+<div class="modal" id="edit-budget-modal">
+  <div class="modal-content">
+    <span class="close-btn" id="close-edit-budget">&times;</span>
+    <h2><i class="fa-solid fa-sack-dollar"></i> Chỉnh sửa Ngân sách</h2>
+
+    <div class="eb-campaign-info" id="eb-campaign-info"></div>
+
+    <div class="form-group" style="margin-top:1.25rem">
+      <label>Ngân sách ngày mới</label>
+      <div class="budget-input-wrap">
+        <input type="number" id="eb-new-budget" placeholder="0" step="10000" min="0">
+        <span class="budget-unit" id="eb-currency-label">VND</span>
+      </div>
+      <small>Ngân sách hiện tại: <strong id="eb-current-label">—</strong></small>
+    </div>
+
+    <div class="eb-presets">
+      <span class="eb-preset-label">Thay đổi nhanh:</span>
+      <button class="eb-preset-btn up" data-pct="10">+10%</button>
+      <button class="eb-preset-btn up" data-pct="20">+20%</button>
+      <button class="eb-preset-btn up" data-pct="50">+50%</button>
+      <button class="eb-preset-btn up" data-pct="100">+100%</button>
+      <button class="eb-preset-btn down" data-pct="-10">-10%</button>
+      <button class="eb-preset-btn down" data-pct="-20">-20%</button>
+      <button class="eb-preset-btn down" data-pct="-50">-50%</button>
+    </div>
+
+    <div class="eb-slider-wrap">
+      <label>Hoặc thay đổi theo %: <span id="eb-slider-val" class="eb-slider-label">0%</span></label>
+      <input type="range" id="eb-slider" min="-80" max="200" value="0" class="eb-slider">
+    </div>
+
+    <div class="eb-preview" id="eb-preview" style="display:none">
+      <i class="fa-solid fa-arrow-right"></i>
+      <span id="eb-preview-text"></span>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-ghost" id="cancel-edit-budget-btn">Hủy</button>
+      <button class="btn-primary" id="confirm-edit-budget-btn"><i class="fa-solid fa-check"></i> Cập nhật ngân sách</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Bulk Adjust -->
+<div class="modal" id="bulk-modal">
+  <div class="modal-content">
+    <span class="close-btn" id="close-bulk-modal">&times;</span>
+    <h2><i class="fa-solid fa-sliders"></i> Điều chỉnh hàng loạt</h2>
+    <p id="bulk-campaign-count" style="color:var(--text-muted);margin-bottom:1rem"></p>
+
+    <div class="eb-presets" style="margin-bottom:1.5rem">
+      <span class="eb-preset-label">Thay đổi nhanh:</span>
+      <button class="eb-preset-btn up" data-pct="10">+10%</button>
+      <button class="eb-preset-btn up" data-pct="20">+20%</button>
+      <button class="eb-preset-btn up" data-pct="50">+50%</button>
+      <button class="eb-preset-btn down" data-pct="-10">-10%</button>
+      <button class="eb-preset-btn down" data-pct="-20">-20%</button>
+      <button class="eb-preset-btn down" data-pct="-50">-50%</button>
+    </div>
+
+    <div class="eb-slider-wrap">
+      <label>Hoặc tuỳ chỉnh: <span id="bulk-slider-val" class="eb-slider-label">0%</span></label>
+      <input type="range" id="bulk-slider" min="-80" max="200" value="0" class="eb-slider">
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-ghost" id="cancel-bulk-btn">Hủy</button>
+      <button class="btn-primary" id="confirm-bulk-btn"><i class="fa-solid fa-check"></i> Áp dụng cho tất cả</button>
+    </div>
+  </div>
+</div>
+
+<script src="auth.js"></script>
+<script src="meta-budget.js"></script>
+</body>
+</html>

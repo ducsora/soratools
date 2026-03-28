@@ -4,6 +4,87 @@
 // ============================
 'use strict';
 
+// ======== SAFE STORAGE WRAPPER ========
+const Storage = {
+    get(key, fallback) {
+        try {
+            const raw = localStorage.getItem(key);
+            if (raw === null) return fallback;
+            return JSON.parse(raw);
+        } catch(e) {
+            console.warn('[SoraTools] Storage.get error:', key, e);
+            return fallback;
+        }
+    },
+    set(key, value) {
+        try {
+            localStorage.setItem(key, JSON.stringify(value));
+            return true;
+        } catch(e) {
+            console.error('[SoraTools] Storage.set FAILED:', key, e);
+            // Nếu storage đầy, thử xóa bớt dữ liệu cũ
+            if (e.name === 'QuotaExceededError') {
+                alert('⚠️ Bộ nhớ trình duyệt đã đầy. Hãy xuất backup và xóa bớt dữ liệu.');
+            }
+            return false;
+        }
+    },
+    remove(key) {
+        try { localStorage.removeItem(key); } catch(e) {}
+    }
+};
+
+// ======== BACKUP / RESTORE ========
+window.exportBackup = function() {
+    const data = {
+        version: 2,
+        exportedAt: new Date().toISOString(),
+        transactions: Storage.get('sora_transactions', []),
+        jars: Storage.get('sora_jars', null),
+        todos: Storage.get('sora_todo_v2', []),
+        goals: Storage.get('sora_goals', {}),
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `soratools-backup-${new Date().toISOString().slice(0,10)}.json`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+};
+
+window.importBackup = function(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        try {
+            const data = JSON.parse(e.target.result);
+            if (!data.version) throw new Error('File không hợp lệ');
+            if (!confirm(`Khôi phục backup từ ${data.exportedAt}?\nDữ liệu hiện tại sẽ bị ghi đè.`)) return;
+            if (data.transactions) Storage.set('sora_transactions', data.transactions);
+            if (data.jars)         Storage.set('sora_jars', data.jars);
+            if (data.todos)        Storage.set('sora_todo_v2', data.todos);
+            if (data.goals)        Storage.set('sora_goals', data.goals);
+            alert('✅ Khôi phục thành công! Trang sẽ tải lại.');
+            location.reload();
+        } catch(err) {
+            alert('❌ File backup không hợp lệ: ' + err.message);
+        }
+    };
+    reader.readAsText(file);
+    input.value = '';
+};
+
+// ======== AUTH GUARD ========
+// Must be logged in to access this page
+const __currentUser = AuthGuard.require();
+if (!__currentUser) throw new Error('Not authenticated'); // stops execution if redirected
+
+// User-namespaced storage key factory
+function UK(suffix) {
+    return AuthGuard.storageKey(suffix);
+}
+
 // ======== THEME ========
 const themeToggle = document.getElementById('theme-toggle');
 function initTheme() {
@@ -41,12 +122,12 @@ function switchTab(id) {
 switchTab(localStorage.getItem(LAST_TAB) || 'chitieu');
 
 // ======== FINANCE ========
-const TX_KEY = 'sora_transactions';
-let transactions = JSON.parse(localStorage.getItem(TX_KEY) || '[]');
+const TX_KEY  = UK('transactions');
+let transactions = Storage.get(TX_KEY, []);
 
 const fmt = n => new Intl.NumberFormat('vi-VN').format(Math.abs(n)) + ' ₫';
 
-function saveTx() { localStorage.setItem(TX_KEY, JSON.stringify(transactions)); }
+function saveTx() { Storage.set(TX_KEY, transactions); }
 
 function renderTx() {
     const list = document.getElementById('tx-list');
@@ -114,7 +195,7 @@ document.getElementById('save-tx-btn').addEventListener('click', () => {
 });
 
 // ======== JARS ========
-const JARS_KEY = 'sora_jars';
+const JARS_KEY = UK('jars');
 const DEFAULT_JARS = [
     { id:'j1', emoji:'🎯', name:'Chi tiêu thiết yếu', pct:55, balance:0, color:'#facc15' },
     { id:'j2', emoji:'🏦', name:'Tiết kiệm',          pct:10, balance:0, color:'#60a5fa' },
@@ -123,8 +204,8 @@ const DEFAULT_JARS = [
     { id:'j5', emoji:'🎉', name:'Hưởng thụ',          pct:10, balance:0, color:'#f97316' },
     { id:'j6', emoji:'💝', name:'Từ thiện',            pct:5,  balance:0, color:'#f43f5e' },
 ];
-let jars = JSON.parse(localStorage.getItem(JARS_KEY) || 'null') || DEFAULT_JARS;
-function saveJars() { localStorage.setItem(JARS_KEY, JSON.stringify(jars)); }
+let jars = Storage.get(JARS_KEY, null) || DEFAULT_JARS;
+function saveJars() { Storage.set(JARS_KEY, jars); }
 
 function renderJars() {
     const el = document.getElementById('jars-list');
@@ -208,13 +289,13 @@ document.getElementById('confirm-dist-btn').addEventListener('click', () => {
 });
 
 // ======== TO-DO ========
-const TODO_KEY = 'sora_todo_v2';
-let todos = JSON.parse(localStorage.getItem(TODO_KEY) || '[]');
+const TODO_KEY = UK('todo_v2');
+let todos = Storage.get(TODO_KEY, []);
 let todoFilter = 'all';
 let selectedPri = 'medium';
 let editingTodoId = null;
 
-function saveTodos() { localStorage.setItem(TODO_KEY, JSON.stringify(todos)); }
+function saveTodos() { Storage.set(TODO_KEY, todos); }
 
 function renderTodos() {
     const search = document.getElementById('search-task').value.toLowerCase();
@@ -351,10 +432,10 @@ document.getElementById('clear-done-btn').addEventListener('click', () => {
 });
 
 // ======== GOALS ========
-const GOALS_KEY = 'sora_goals';
-let gState = JSON.parse(localStorage.getItem(GOALS_KEY) || '{}');
+const GOALS_KEY = UK('goals');
+let gState = Storage.get(GOALS_KEY, {});
 gState = { mainGoal:'', tasks:[], streak:0, totalCompleted:0, lastDate:'', ...gState };
-function saveGoals() { localStorage.setItem(GOALS_KEY, JSON.stringify(gState)); }
+function saveGoals() { Storage.set(GOALS_KEY, gState); }
 
 const CIRC = 2 * Math.PI * 48;
 
@@ -453,8 +534,61 @@ document.getElementById('reset-day-btn').addEventListener('click', () => {
     saveGoals(); renderGoalTasks();
 });
 
+// ======== SIDEBAR — delegate to SoraUI (auth.js) ========
+// SoraUI.initSidebar() handles: nav filtering by role, user widget, dropdown
+
+// ======== BACKUP — scoped to current user ========
+window.exportBackup = function() {
+    const data = {
+        version: 2,
+        user: __currentUser.username,
+        exportedAt: new Date().toISOString(),
+        transactions: Storage.get(TX_KEY, []),
+        jars:         Storage.get(JARS_KEY, null),
+        todos:        Storage.get(TODO_KEY, []),
+        goals:        Storage.get(GOALS_KEY, {}),
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `soratools-${__currentUser.username}-${new Date().toISOString().slice(0,10)}.json`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+};
+
+window.importBackup = function(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        try {
+            const data = JSON.parse(e.target.result);
+            if (!data.version) throw new Error('File không hợp lệ');
+            if (!confirm(`Khôi phục backup từ ${data.exportedAt}?\nDữ liệu hiện tại của bạn sẽ bị ghi đè.`)) return;
+            if (data.transactions) Storage.set(TX_KEY,   data.transactions);
+            if (data.jars)         Storage.set(JARS_KEY, data.jars);
+            if (data.todos)        Storage.set(TODO_KEY, data.todos);
+            if (data.goals)        Storage.set(GOALS_KEY, data.goals);
+            alert('✅ Khôi phục thành công! Trang sẽ tải lại.');
+            location.reload();
+        } catch(err) {
+            alert('❌ File backup không hợp lệ: ' + err.message);
+        }
+    };
+    reader.readAsText(file);
+    input.value = '';
+};
+
 // ======== INIT ========
 initTheme();
+SoraUI.initSidebar();  // Auth + Role-based nav filter + User widget
+
+console.log('[SoraTools Init] User:', __currentUser.username,
+    '| Tx:', transactions.length,
+    '| Todos:', todos.length,
+    '| Goals:', gState.tasks?.length || 0
+);
+
 renderTx();
 renderJars();
 renderTodos();

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SoraTools – Quản trị hệ thống</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+<div class="app-layout">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo"><i class="fa-solid fa-layer-group"></i><span>SoraTools</span></div>
+    </div>
+    <div class="nav-section">
+      <p class="nav-label">Bộ công cụ</p>
+      <nav class="nav-menu">
+        <a href="personal.html"      data-perm="personal"  class="nav-item nav-item-personal"><i class="fa-solid fa-user"></i><span>Cá nhân</span></a>
+        <a href="chat.html"          data-perm="chat"       class="nav-item nav-item-ai"><i class="fa-solid fa-robot"></i><span>Chat với AI</span></a>
+        <a href="ads-report.html"    data-perm="ads"        class="nav-item nav-item-ads"><i class="fa-solid fa-chart-column"></i><span>Báo cáo Ads</span></a>
+        <a href="meta-budget.html"   data-perm="meta"       class="nav-item nav-item-meta"><i class="fa-brands fa-meta"></i><span>Meta Budget</span></a>
+        <a href="meta-campaign.html" data-perm="meta"       class="nav-item nav-item-campaign"><i class="fa-solid fa-rocket"></i><span>Campaign Creator</span></a>
+        <a href="research.html"      data-perm="research"   class="nav-item nav-item-research"><i class="fa-solid fa-magnifying-glass-chart"></i><span>Product Research</span></a>
+        <a href="post-designer.html" data-perm="designer"   class="nav-item nav-item-designer"><i class="fa-solid fa-pen-ruler"></i><span>Post Designer</span></a>
+      </nav>
+      <p class="nav-label" style="margin-top:1.5rem">Quản trị</p>
+      <nav class="nav-menu">
+        <a href="admin.html"         data-perm="admin"      class="nav-item nav-item-admin active"><i class="fa-solid fa-shield-halved"></i><span>Quản lý tài khoản</span></a>
+      </nav>
+    </div>
+    <div class="sidebar-footer">
+      <div class="user-widget" id="user-widget">
+        <div class="user-avatar" id="sidebar-avatar">🦊</div>
+        <div class="user-info">
+          <div class="user-name" id="sidebar-name">Người dùng</div>
+          <div class="user-role" id="sidebar-username">@username</div>
+        </div>
+        <button class="user-menu-btn" id="user-menu-toggle"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+      </div>
+      <div class="user-dropdown" id="user-dropdown">
+        <div id="sidebar-role-badge" style="padding:.3rem .5rem;margin-bottom:.3rem"></div>
+        <div class="sep-thin"></div>
+        <button class="logout-btn" onclick="AuthGuard.logout()">
+          <i class="fa-solid fa-right-from-bracket"></i> Đăng xuất
+        </button>
+      </div>
+      <div class="theme-toggle" id="theme-toggle"><i class="fa-solid fa-moon"></i><span>Chế độ Tối</span></div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main-content">
+    <div class="workspace">
+
+      <!-- Page Header -->
+      <div class="admin-header">
+        <div>
+          <h2><i class="fa-solid fa-shield-halved"></i> Quản lý tài khoản</h2>
+          <p id="admin-date"></p>
+        </div>
+        <button class="btn-primary" id="open-create-btn">
+          <i class="fa-solid fa-user-plus"></i> Tạo tài khoản mới
+        </button>
+      </div>
+
+      <!-- Stats row -->
+      <div class="admin-stats" id="admin-stats">
+        <div class="stat-pill" id="stat-total">
+          <i class="fa-solid fa-users"></i>
+          <span class="sp-val" id="st-total">0</span>
+          <span class="sp-label">Tổng người dùng</span>
+        </div>
+        <div class="stat-pill stat-ceo" id="stat-ceo">
+          <i class="fa-solid fa-crown"></i>
+          <span class="sp-val" id="st-ceo">0</span>
+          <span class="sp-label">CEO</span>
+        </div>
+        <div class="stat-pill stat-leader" id="stat-leader">
+          <i class="fa-solid fa-user-tie"></i>
+          <span class="sp-val" id="st-leader">0</span>
+          <span class="sp-label">Leader</span>
+        </div>
+        <div class="stat-pill stat-staff" id="stat-staff">
+          <i class="fa-solid fa-user"></i>
+          <span class="sp-val" id="st-staff">0</span>
+          <span class="sp-label">Staff</span>
+        </div>
+      </div>
+
+      <!-- Filter bar -->
+      <div class="filter-bar">
+        <div class="search-wrap2">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input type="text" id="search-user" placeholder="Tìm tên hoặc username...">
+        </div>
+        <div class="role-pills">
+          <button class="rpill active" data-r="">Tất cả</button>
+          <button class="rpill rpill-ceo" data-r="ceo"><i class="fa-solid fa-crown"></i> CEO</button>
+          <button class="rpill rpill-leader" data-r="leader"><i class="fa-solid fa-user-tie"></i> Leader</button>
+          <button class="rpill rpill-staff" data-r="staff"><i class="fa-solid fa-user"></i> Staff</button>
+        </div>
+      </div>
+
+      <!-- User cards grid -->
+      <div class="user-grid" id="user-grid">
+        <div class="empty-hint">Đang tải...</div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- Modal: Create Account -->
+<div class="modal" id="create-modal">
+  <div class="modal-content">
+    <span class="close-btn" id="close-create-modal">&times;</span>
+    <h2><i class="fa-solid fa-user-plus"></i> Tạo tài khoản mới</h2>
+    <div class="msg err" id="create-err"><i class="fa-solid fa-circle-exclamation"></i><span></span></div>
+    <div class="msg ok"  id="create-ok"><i class="fa-solid fa-circle-check"></i><span></span></div>
+
+    <div class="form-group">
+      <label>Tên hiển thị</label>
+      <input type="text" id="c-name" placeholder="Nguyễn Văn A" maxlength="30">
+    </div>
+    <div class="form-group">
+      <label>Tên đăng nhập</label>
+      <input type="text" id="c-user" placeholder="username" maxlength="20"
+        oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9_.]/g,'')">
+    </div>
+    <div class="form-group">
+      <label>Mật khẩu tạm thời</label>
+      <input type="text" id="c-pw" placeholder="Ít nhất 6 ký tự">
+    </div>
+    <div class="form-group">
+      <label>Vai trò</label>
+      <div class="role-select-group" id="c-role-select">
+        <div class="role-opt role-opt-ceo" data-role="ceo">
+          <i class="fa-solid fa-crown"></i>
+          <div>
+            <div class="ro-title">CEO</div>
+            <div class="ro-desc">Toàn quyền hệ thống</div>
+          </div>
+        </div>
+        <div class="role-opt role-opt-leader selected" data-role="leader">
+          <i class="fa-solid fa-user-tie"></i>
+          <div>
+            <div class="ro-title">Leader</div>
+            <div class="ro-desc">Truy cập tất cả công cụ</div>
+          </div>
+        </div>
+        <div class="role-opt role-opt-staff" data-role="staff">
+          <i class="fa-solid fa-user"></i>
+          <div>
+            <div class="ro-title">Staff</div>
+            <div class="ro-desc">Cá nhân & Chat AI</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="btn-submit" id="confirm-create-btn">
+      <i class="fa-solid fa-user-plus"></i> Tạo tài khoản
+    </button>
+  </div>
+</div>
+
+<!-- Modal: Edit Role -->
+<div class="modal" id="edit-modal">
+  <div class="modal-content">
+    <span class="close-btn" id="close-edit-modal">&times;</span>
+    <h2 id="edit-modal-title"><i class="fa-solid fa-pen-to-square"></i> Chỉnh sửa vai trò</h2>
+    <div class="msg err" id="edit-err"><i class="fa-solid fa-circle-exclamation"></i><span></span></div>
+
+    <div class="edit-user-info" id="edit-user-info"></div>
+
+    <div class="form-group" style="margin-top:1.25rem">
+      <label>Vai trò mới</label>
+      <div class="role-select-group" id="edit-role-select">
+        <div class="role-opt role-opt-ceo" data-role="ceo">
+          <i class="fa-solid fa-crown"></i>
+          <div>
+            <div class="ro-title">CEO</div>
+            <div class="ro-desc">Toàn quyền hệ thống + Quản lý tài khoản</div>
+          </div>
+        </div>
+        <div class="role-opt role-opt-leader" data-role="leader">
+          <i class="fa-solid fa-user-tie"></i>
+          <div>
+            <div class="ro-title">Leader</div>
+            <div class="ro-desc">Cá nhân, Chat AI, Ads, Research, Post Designer</div>
+          </div>
+        </div>
+        <div class="role-opt role-opt-staff" data-role="staff">
+          <i class="fa-solid fa-user"></i>
+          <div>
+            <div class="ro-title">Staff</div>
+            <div class="ro-desc">Chỉ Cá nhân & Chat với AI</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-ghost" id="cancel-edit-btn">Hủy</button>
+      <button class="btn-primary" id="save-edit-btn"><i class="fa-solid fa-floppy-disk"></i> Lưu thay đổi</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Change Password -->
+<div class="modal" id="pw-modal">
+  <div class="modal-content">
+    <span class="close-btn" id="close-pw-modal">&times;</span>
+    <h2><i class="fa-solid fa-key"></i> Đổi mật khẩu</h2>
+    <div class="msg err" id="pw-err"><i class="fa-solid fa-circle-exclamation"></i><span></span></div>
+    <div class="msg ok"  id="pw-ok" ><i class="fa-solid fa-circle-check"></i><span></span></div>
+
+    <div class="edit-user-info" id="pw-user-info"></div>
+
+    <div class="form-group" style="margin-top:1.25rem">
+      <label>Mật khẩu mới</label>
+      <div style="position:relative">
+        <input type="password" id="pw-new" placeholder="Tối thiểu 6 ký tự" autocomplete="new-password">
+        <button type="button" onclick="togglePwVis('pw-new','pw-new-eye')" style="position:absolute;right:.75rem;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-muted);cursor:pointer;padding:0" id="pw-new-eye"><i class="fa-solid fa-eye"></i></button>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Xác nhận mật khẩu mới</label>
+      <div style="position:relative">
+        <input type="password" id="pw-confirm" placeholder="Nhập lại mật khẩu" autocomplete="new-password">
+        <button type="button" onclick="togglePwVis('pw-confirm','pw-confirm-eye')" style="position:absolute;right:.75rem;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-muted);cursor:pointer;padding:0" id="pw-confirm-eye"><i class="fa-solid fa-eye"></i></button>
+      </div>
+    </div>
+
+    <!-- Password strength meter -->
+    <div id="pw-strength-wrap" style="margin-bottom:1.25rem">
+      <div style="display:flex;justify-content:space-between;margin-bottom:.4rem;font-size:.78rem;color:var(--text-muted)">
+        <span>Mức độ bảo mật</span>
+        <span id="pw-strength-label">Chưa nhập</span>
+      </div>
+      <div style="height:5px;border-radius:3px;background:var(--border-color);overflow:hidden">
+        <div id="pw-strength-bar" style="height:100%;width:0;transition:width .3s,background .3s;border-radius:3px"></div>
+      </div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-ghost" id="cancel-pw-btn">Hủy</button>
+      <button class="btn-primary" id="save-pw-btn"><i class="fa-solid fa-key"></i> Cập nhật mật khẩu</button>
+    </div>
+  </div>
+</div>
+
+<script src="auth.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>

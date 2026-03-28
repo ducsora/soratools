@@ -1,0 +1,341 @@
+/* ============================================================
+   SoraTools – Admin Panel Styles (admin.css)
+   ============================================================ */
+
+/* ── Page header ─────────────────────────────────────────── */
+.admin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.75rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.admin-header h2 {
+  font-size: 1.6rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+}
+.admin-header h2 i { color: var(--primary-color); }
+.admin-header p { color: var(--text-muted); font-size: .85rem; margin-top: .2rem; }
+
+/* ── Stats row ───────────────────────────────────────────── */
+.admin-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+}
+.stat-pill {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 1.2rem 1.4rem;
+  display: flex;
+  align-items: center;
+  gap: .85rem;
+  transition: transform .2s, box-shadow .2s;
+}
+.stat-pill:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,.15); }
+.stat-pill i {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem;
+  background: rgba(250,204,21,.1);
+  color: var(--primary-color);
+}
+.stat-ceo i    { background: rgba(250,204,21,.12); color: #facc15; }
+.stat-leader i { background: rgba(129,140,248,.12); color: #818cf8; }
+.stat-staff i  { background: rgba(148,163,184,.12); color: #94a3b8; }
+.sp-val   { font-size: 1.5rem; font-weight: 800; line-height: 1; }
+.sp-label { font-size: .78rem; color: var(--text-muted); margin-top: .1rem; }
+
+/* ── Filter bar ──────────────────────────────────────────── */
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+.search-wrap2 {
+  position: relative;
+  flex: 1;
+  min-width: 200px;
+}
+.search-wrap2 i {
+  position: absolute;
+  left: .9rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: .85rem;
+}
+.search-wrap2 input {
+  width: 100%;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  font-family: inherit;
+  font-size: .9rem;
+  padding: .65rem .95rem .65rem 2.4rem;
+  border-radius: 10px;
+  outline: none;
+  transition: border-color .2s, box-shadow .2s;
+}
+.search-wrap2 input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(250,204,21,.1);
+}
+.role-pills { display: flex; gap: .4rem; flex-wrap: wrap; }
+.rpill {
+  padding: .5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: none;
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: .82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .2s;
+  display: flex; align-items: center; gap: .4rem;
+}
+.rpill:hover, .rpill.active {
+  background: var(--primary-color);
+  color: #000;
+  border-color: var(--primary-color);
+}
+.rpill-ceo.active     { background: #facc15; border-color: #facc15; color: #000; }
+.rpill-leader.active  { background: #818cf8; border-color: #818cf8; color: #fff; }
+.rpill-staff.active   { background: #64748b; border-color: #64748b; color: #fff; }
+
+/* ── User card grid ──────────────────────────────────────── */
+.user-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1rem;
+}
+.user-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 1.25rem;
+  transition: transform .2s, box-shadow .2s, border-color .2s;
+}
+.user-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,.15); }
+.role-card-ceo    { border-left: 3px solid #facc15; }
+.role-card-leader { border-left: 3px solid #818cf8; }
+.role-card-staff  { border-left: 3px solid #64748b; }
+
+.uc-top {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  margin-bottom: .75rem;
+}
+.uc-avatar {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: rgba(250,204,21,.1);
+  border: 2px solid rgba(250,204,21,.25);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+.uc-name {
+  font-weight: 700;
+  font-size: .95rem;
+  display: flex; align-items: center; gap: .4rem;
+}
+.uc-uname { color: var(--text-muted); font-size: .8rem; margin-top: .1rem; }
+
+.self-badge {
+  font-size: .68rem;
+  background: rgba(250,204,21,.15);
+  color: #facc15;
+  border: 1px solid rgba(250,204,21,.3);
+  border-radius: 99px;
+  padding: .1rem .5rem;
+  font-weight: 600;
+}
+
+/* Role badge (shared) */
+.role-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  padding: .3rem .75rem;
+  border-radius: 99px;
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: .2px;
+  white-space: nowrap;
+}
+.role-ceo    { background: rgba(250,204,21,.12); color: #facc15; }
+.role-leader { background: rgba(129,140,248,.12); color: #818cf8; }
+.role-staff  { background: rgba(148,163,184,.1);  color: #94a3b8; }
+
+.uc-meta {
+  color: var(--text-muted);
+  font-size: .78rem;
+  display: flex;
+  align-items: center;
+  gap: .3rem;
+  margin-bottom: .75rem;
+}
+.uc-meta i { font-size: .7rem; }
+
+/* Permission tags */
+.uc-perms {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .3rem;
+  margin-bottom: .9rem;
+}
+.perm-tag {
+  font-size: .7rem;
+  padding: .22rem .6rem;
+  border-radius: 6px;
+  display: flex; align-items: center; gap: .3rem;
+  font-weight: 600;
+}
+.perm-on  { background: rgba(34,197,94,.1);  color: #22c55e; border: 1px solid rgba(34,197,94,.2); }
+.perm-off { background: rgba(148,163,184,.06); color: #475569; border: 1px solid rgba(148,163,184,.15); text-decoration: line-through; opacity: .6; }
+
+/* Card actions */
+.uc-actions {
+  display: flex;
+  gap: .5rem;
+  align-items: center;
+  padding-top: .75rem;
+  border-top: 1px solid var(--border-color);
+}
+.uc-btn {
+  flex: 1;
+  padding: .5rem;
+  border-radius: 8px;
+  border: none;
+  font-family: inherit;
+  font-size: .8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .2s;
+  display: flex; align-items: center; justify-content: center; gap: .4rem;
+}
+.uc-btn-edit {
+  background: rgba(250,204,21,.1);
+  color: #facc15;
+  border: 1px solid rgba(250,204,21,.2);
+}
+.uc-btn-edit:hover { background: rgba(250,204,21,.2); }
+.uc-btn-del {
+  background: rgba(239,68,68,.08);
+  color: #ef4444;
+  border: 1px solid rgba(239,68,68,.2);
+  flex: 0;
+  padding: .5rem .75rem;
+}
+.uc-btn-del:hover { background: rgba(239,68,68,.18); }
+.uc-btn-pw {
+  background: rgba(96,165,250,.08);
+  color: #60a5fa;
+  border: 1px solid rgba(96,165,250,.2);
+  flex: 0;
+  padding: .5rem .75rem;
+}
+.uc-btn-pw:hover { background: rgba(96,165,250,.18); }
+
+.uc-self-note {
+  color: var(--text-muted);
+  font-size: .78rem;
+  display: flex; align-items: center; gap: .4rem;
+}
+
+/* ── Role select group (modal) ───────────────────────────── */
+.role-select-group {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}
+.role-opt {
+  display: flex;
+  align-items: center;
+  gap: .9rem;
+  padding: .85rem 1rem;
+  border-radius: 10px;
+  border: 2px solid var(--border-color);
+  cursor: pointer;
+  transition: all .2s;
+  background: var(--bg-color);
+}
+.role-opt:hover { border-color: var(--primary-color); }
+.role-opt.selected { border-color: var(--primary-color); background: rgba(250,204,21,.05); }
+.role-opt > i { font-size: 1.2rem; width: 28px; text-align: center; }
+.role-opt-ceo    > i { color: #facc15; }
+.role-opt-leader > i { color: #818cf8; }
+.role-opt-staff  > i { color: #94a3b8; }
+.ro-title { font-weight: 700; font-size: .9rem; }
+.ro-desc  { font-size: .78rem; color: var(--text-muted); margin-top: .1rem; }
+
+/* ── Edit user info block (modal) ────────────────────────── */
+.edit-user-info { margin-bottom: .5rem; }
+
+/* ── Admin nav item color ────────────────────────────────── */
+.nav-item-admin {
+  background: linear-gradient(135deg, rgba(250,204,21,.08), rgba(239,68,68,.06));
+  border: 1px solid rgba(250,204,21,.15);
+}
+.nav-item-admin i { color: #facc15; }
+.nav-item-admin:hover, .nav-item-admin.active {
+  background: rgba(250,204,21,.15) !important;
+  border-color: rgba(250,204,21,.3) !important;
+  color: #facc15 !important;
+}
+
+/* ── Toast notification ──────────────────────────────────── */
+.sora-toast {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  padding: .85rem 1.25rem;
+  border-radius: 10px;
+  font-size: .9rem;
+  font-weight: 600;
+  font-family: inherit;
+  z-index: 9999;
+  transform: translateY(20px);
+  opacity: 0;
+  transition: all .3s cubic-bezier(.34,1.56,.64,1);
+  pointer-events: none;
+  max-width: 320px;
+}
+.sora-toast.show { opacity: 1; transform: translateY(0); }
+.sora-toast.success { background: rgba(34,197,94,.15); border: 1px solid rgba(34,197,94,.3); color: #86efac; }
+.sora-toast.error   { background: rgba(239,68,68,.15);  border: 1px solid rgba(239,68,68,.3);  color: #fca5a5; }
+
+/* ── Modal shared (already in styles.css but ensure msg works) */
+.msg {
+  font-size: .82rem;
+  border-radius: 8px;
+  padding: .65rem .9rem;
+  margin-bottom: 1rem;
+  display: none;
+  align-items: center;
+  gap: .5rem;
+}
+.msg.show { display: flex; }
+.msg.err  { background: rgba(239,68,68,.1); border: 1px solid rgba(239,68,68,.2); color: #fca5a5; }
+.msg.ok   { background: rgba(34,197,94,.1); border: 1px solid rgba(34,197,94,.2); color: #86efac; }
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .admin-stats { grid-template-columns: repeat(2, 1fr); }
+  .user-grid   { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .admin-stats { grid-template-columns: 1fr 1fr; }
+}

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SoraTools - Product Research</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="research.css">
+</head>
+<body>
+    <div class="app-layout">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fa-solid fa-layer-group"></i>
+                    <span>SoraTools</span>
+                </div>
+            </div>
+            <div class="nav-section">
+                <p class="nav-label">Bộ công cụ</p>
+                <nav class="nav-menu">
+                    <a href="personal.html"      class="nav-item nav-item-personal"><i class="fa-solid fa-user"></i><span>Cá nhân</span></a>
+                    <a href="chat.html"          class="nav-item nav-item-ai"><i class="fa-solid fa-robot"></i><span>Chat với AI</span></a>
+                    <a href="ads-report.html"    class="nav-item nav-item-ads"><i class="fa-solid fa-chart-column"></i><span>Báo cáo Ads</span></a>
+                    <a href="research.html"      class="nav-item nav-item-research active"><i class="fa-solid fa-magnifying-glass-chart"></i><span>Product Research</span></a>
+                    <a href="post-designer.html" class="nav-item nav-item-designer"><i class="fa-solid fa-pen-ruler"></i><span>Post Designer</span></a>
+                </nav>
+            </div>
+            <div class="sidebar-footer">
+                <div class="theme-toggle" id="theme-toggle">
+                    <i class="fa-solid fa-moon"></i>
+                    <span>Chế độ Tối</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main -->
+        <main class="main-content">
+            <div class="workspace">
+
+                <!-- Header -->
+                <div class="research-header">
+                    <div>
+                        <h2><i class="fa-solid fa-magnifying-glass-chart"></i> Product Research</h2>
+                        <p>Phân tích xu hướng thị trường Philippines với Gemini AI</p>
+                    </div>
+                    <div class="header-actions">
+                        <button class="btn-ghost-sm" id="history-btn"><i class="fa-solid fa-clock-rotate-left"></i> Lịch sử</button>
+                        <button class="btn-ghost-sm" id="settings-btn"><i class="fa-solid fa-gear"></i> Cấu hình AI</button>
+                    </div>
+                </div>
+
+                <!-- Quick Links Bar -->
+                <div class="quick-links-bar">
+                    <span class="ql-label"><i class="fa-solid fa-bolt"></i> Truy cập nhanh</span>
+                    <a class="ql-btn trends" href="https://trends.google.com/trends/explore?geo=PH&hl=vi" target="_blank">
+                        <i class="fa-brands fa-google"></i> Google Trends PH
+                    </a>
+                    <a class="ql-btn tiktok" href="https://ads.tiktok.com/business/creativecenter/inspiration/topads/pc/en" target="_blank">
+                        <i class="fa-brands fa-tiktok"></i> TikTok Creative Center
+                    </a>
+                    <a class="ql-btn aliprice" href="https://www.aliprice.com/" target="_blank">
+                        <i class="fa-solid fa-tags"></i> AliPrice
+                    </a>
+                    <a class="ql-btn shophunter" href="https://shophunter.io/" target="_blank">
+                        <i class="fa-solid fa-crosshairs"></i> ShopHunter
+                    </a>
+                    <a class="ql-btn shopee" href="https://shopee.ph/search?keyword=trending" target="_blank">
+                        <i class="fa-solid fa-basket-shopping"></i> Shopee PH
+                    </a>
+                    <a class="ql-btn aliexpress" href="https://www.aliexpress.com/category/consumer-electronics.html" target="_blank">
+                        <i class="fa-solid fa-globe"></i> AliExpress
+                    </a>
+                </div>
+
+                <!-- Main layout: left panel + right result -->
+                <div class="research-layout">
+
+                    <!-- LEFT: Prompt Builder -->
+                    <div class="prompt-panel">
+                        <div class="panel-header">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> Prompt Nghiên cứu
+                        </div>
+
+                        <!-- Template Presets -->
+                        <div class="preset-label">⚡ Template nhanh</div>
+                        <div class="preset-grid" id="preset-grid">
+                            <button class="preset-btn" data-preset="trending">
+                                🔥 Sản phẩm trending
+                            </button>
+                            <button class="preset-btn" data-preset="niche">
+                                🎯 Phân tích ngách
+                            </button>
+                            <button class="preset-btn" data-preset="competitor">
+                                🕵️ Phân tích đối thủ
+                            </button>
+                            <button class="preset-btn" data-preset="winner">
+                                🏆 Tìm Winner
+                            </button>
+                            <button class="preset-btn" data-preset="seasonal">
+                                📅 Trend theo mùa
+                            </button>
+                            <button class="preset-btn" data-preset="ads">
+                                📸 Ý tưởng Ads
+                            </button>
+                        </div>
+
+                        <!-- Custom Prompt -->
+                        <div class="form-group" style="margin-top:1rem;">
+                            <label>Yêu cầu của bạn</label>
+                            <textarea id="research-prompt" rows="6" placeholder="VD: Dựa trên xu hướng tháng 3/2026 tại Philippines, hãy liệt kê 5 ngách sản phẩm gia dụng đang tăng trưởng mạnh nhất và giải thích lý do..."></textarea>
+                        </div>
+
+                        <!-- Options -->
+                        <div class="research-options">
+                            <div class="opt-row">
+                                <label>Thị trường</label>
+                                <select id="opt-market">
+                                    <option value="Philippines">🇵🇭 Philippines</option>
+                                    <option value="Vietnam">🇻🇳 Việt Nam</option>
+                                    <option value="Indonesia">🇮🇩 Indonesia</option>
+                                    <option value="Thailand">🇹🇭 Thailand</option>
+                                    <option value="SEA">🌏 Đông Nam Á</option>
+                                </select>
+                            </div>
+                            <div class="opt-row">
+                                <label>Danh mục</label>
+                                <select id="opt-category">
+                                    <option value="household">🏠 Gia dụng</option>
+                                    <option value="beauty">💄 Làm đẹp</option>
+                                    <option value="fashion">👗 Thời trang</option>
+                                    <option value="electronics">📱 Điện tử</option>
+                                    <option value="health">💪 Sức khỏe</option>
+                                    <option value="pet">🐾 Thú cưng</option>
+                                    <option value="food">🍜 Thực phẩm</option>
+                                    <option value="all">🌐 Tất cả</option>
+                                </select>
+                            </div>
+                            <div class="opt-row">
+                                <label>Khung thời gian</label>
+                                <select id="opt-timeframe">
+                                    <option value="7 ngày qua">7 ngày qua</option>
+                                    <option value="30 ngày qua" selected>30 ngày qua</option>
+                                    <option value="90 ngày qua">90 ngày qua</option>
+                                    <option value="6 tháng qua">6 tháng qua</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button class="btn-research" id="run-research-btn">
+                            <i class="fa-solid fa-sparkles"></i> Phân tích với Gemini AI
+                        </button>
+                    </div>
+
+                    <!-- RIGHT: Results -->
+                    <div class="result-panel">
+                        <!-- Idle state -->
+                        <div class="result-idle" id="result-idle">
+                            <div class="idle-icon">🔭</div>
+                            <h3>Chưa có kết quả</h3>
+                            <p>Chọn template hoặc nhập yêu cầu, sau đó nhấn<br><strong>Phân tích với Gemini AI</strong></p>
+                            <div class="idle-tips">
+                                <div class="tip-item"><span>💡</span> Gemini sử dụng kiến thức về xu hướng thị trường SEA cập nhật đến đầu 2025</div>
+                                <div class="tip-item"><span>🎯</span> Cụ thể hóa yêu cầu để có kết quả chính xác hơn</div>
+                                <div class="tip-item"><span>📋</span> Kết quả được lưu tự động để xem lại sau</div>
+                            </div>
+                        </div>
+
+                        <!-- Loading -->
+                        <div class="result-loading" id="result-loading" style="display:none;">
+                            <div class="research-spinner"></div>
+                            <p>Gemini AI đang phân tích thị trường...</p>
+                            <small>Thường mất 5-15 giây</small>
+                        </div>
+
+                        <!-- Result content -->
+                        <div id="result-content" style="display:none;">
+                            <div class="result-topbar">
+                                <div class="result-meta" id="result-meta"></div>
+                                <div class="result-actions">
+                                    <button class="btn-ghost-sm" id="copy-result-btn"><i class="fa-solid fa-copy"></i> Copy</button>
+                                    <button class="btn-ghost-sm" id="save-result-btn"><i class="fa-solid fa-bookmark"></i> Lưu</button>
+                                </div>
+                            </div>
+                            <div class="result-body" id="result-body"></div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal" id="settings-modal">
+        <div class="modal-content">
+            <span class="close-btn" id="close-settings">&times;</span>
+            <h2><i class="fa-solid fa-gear"></i> Cấu hình Gemini AI</h2>
+            <div class="form-group">
+                <label>Gemini API Key</label>
+                <input type="password" id="gemini-key-input" placeholder="AIzaSy...">
+                <small>Lấy tại <a href="https://aistudio.google.com/apikey" target="_blank">Google AI Studio</a> (miễn phí)</small>
+            </div>
+            <div class="form-group">
+                <label>Model</label>
+                <select id="gemini-model-input">
+                    <option value="gemini-2.0-flash">Gemini 2.0 Flash ⚡ (Nhanh nhất)</option>
+                    <option value="gemini-2.0-flash-lite">Gemini 2.0 Flash Lite 🧊 (Hạn mức cao hơn)</option>
+                    <option value="gemini-2.5-pro-exp-03-25">Gemini 2.5 Pro 🔥 (Mạnh nhất)</option>
+                </select>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-ghost" id="close-settings-btn">Hủy</button>
+                <button class="btn-primary" id="save-settings-btn"><i class="fa-solid fa-floppy-disk"></i> Lưu</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- History Modal -->
+    <div class="modal" id="history-modal">
+        <div class="modal-content modal-wide">
+            <span class="close-btn" id="close-history">&times;</span>
+            <h2><i class="fa-solid fa-clock-rotate-left"></i> Lịch sử Research</h2>
+            <div id="history-list"></div>
+        </div>
+    </div>
+
+    <script src="research.js"></script>
+</body>
+</html>

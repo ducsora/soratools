@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SoraTools - Post Designer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="post-designer.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Roboto:wght@400;700&family=Montserrat:wght@400;700;800&family=Playfair+Display:wght@400;700&family=Bebas+Neue&family=Poppins:wght@400;600;800&family=Dancing+Script:wght@700&family=Anton&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="app-layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo"><i class="fa-solid fa-layer-group"></i><span>SoraTools</span></div>
+        </div>
+        <div class="nav-section">
+            <p class="nav-label">Bộ công cụ</p>
+            <nav class="nav-menu">
+                <a href="personal.html"      class="nav-item nav-item-personal"><i class="fa-solid fa-user"></i><span>Cá nhân</span></a>
+                <a href="chat.html"          class="nav-item nav-item-ai"><i class="fa-solid fa-robot"></i><span>Chat với AI</span></a>
+                <a href="ads-report.html"    class="nav-item nav-item-ads"><i class="fa-solid fa-chart-column"></i><span>Báo cáo Ads</span></a>
+                <a href="research.html"      class="nav-item nav-item-research"><i class="fa-solid fa-magnifying-glass-chart"></i><span>Product Research</span></a>
+                <a href="post-designer.html" class="nav-item nav-item-designer active"><i class="fa-solid fa-pen-ruler"></i><span>Post Designer</span></a>
+            </nav>
+        </div>
+        <div class="sidebar-footer">
+            <div class="theme-toggle" id="theme-toggle"><i class="fa-solid fa-moon"></i><span>Chế độ Tối</span></div>
+        </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main-content">
+        <div class="workspace pd-workspace">
+
+            <!-- Header -->
+            <div class="pd-header">
+                <div>
+                    <h2><i class="fa-solid fa-pen-ruler"></i> Post Designer</h2>
+                    <p>Upload ảnh → Thêm text/design → Preview → Đăng lên Facebook Group</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-ghost-sm" id="new-canvas-btn"><i class="fa-solid fa-plus"></i> Mới</button>
+                    <button class="btn-ghost-sm" id="load-template-btn"><i class="fa-solid fa-folder-open"></i> Templates</button>
+                    <button class="btn-ghost-sm" id="save-tpl-btn"><i class="fa-solid fa-bookmark"></i> Lưu template</button>
+                </div>
+            </div>
+
+            <!-- Designer layout -->
+            <div class="pd-layout">
+
+                <!-- ===== LEFT: Controls ===== -->
+                <div class="pd-controls">
+
+                    <!-- Image upload -->
+                    <div class="ctrl-section">
+                        <div class="ctrl-title"><i class="fa-solid fa-image"></i> Ảnh nền</div>
+                        <div class="drop-zone" id="img-drop-zone">
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                            <p>Kéo thả ảnh hoặc</p>
+                            <label class="btn-ghost-sm" style="cursor:pointer">
+                                Chọn file
+                                <input type="file" id="img-upload" accept="image/*" style="display:none">
+                            </label>
+                        </div>
+                        <div class="ctrl-row" style="margin-top:.6rem">
+                            <label class="ctrl-lbl">Canvas size</label>
+                            <select id="canvas-size">
+                                <option value="1080,1080">1080×1080 (Vuông)</option>
+                                <option value="1080,1920">1080×1920 (Story)</option>
+                                <option value="1200,628">1200×628 (FB Link)</option>
+                                <option value="1080,566">1080×566 (Landscape)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Overlay / Background -->
+                    <div class="ctrl-section">
+                        <div class="ctrl-title"><i class="fa-solid fa-layer-group"></i> Lớp nền</div>
+                        <div class="ctrl-row">
+                            <label class="ctrl-lbl">Overlay màu</label>
+                            <input type="color" id="overlay-color" value="#000000">
+                            <input type="range" id="overlay-opacity" min="0" max="100" value="30" style="flex:1">
+                            <span id="overlay-opacity-val" class="val-badge">30%</span>
+                        </div>
+                        <div class="ctrl-row">
+                            <label class="ctrl-lbl">Gradient</label>
+                            <select id="gradient-type">
+                                <option value="none">Không</option>
+                                <option value="bottom">Đen dưới (caption)</option>
+                                <option value="top">Đen trên</option>
+                                <option value="full">Đen cả 2 đầu</option>
+                                <option value="left">Đen trái</option>
+                                <option value="right">Đen phải</option>
+                                <option value="golden">Golden hour</option>
+                                <option value="blue">Cool blue</option>
+                                <option value="purple">Purple vibe</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Text layers -->
+                    <div class="ctrl-section">
+                        <div class="ctrl-title-row">
+                            <div class="ctrl-title"><i class="fa-solid fa-font"></i> Lớp văn bản</div>
+                            <button class="btn-ghost-sm" id="add-text-btn"><i class="fa-solid fa-plus"></i> Thêm</button>
+                        </div>
+                        <div id="text-layers-list"></div>
+                    </div>
+
+                    <!-- Stickers -->
+                    <div class="ctrl-section">
+                        <div class="ctrl-title"><i class="fa-solid fa-face-smile"></i> Sticker / Emoji</div>
+                        <div class="sticker-bar" id="sticker-bar">
+                            <button class="sticker-btn" data-emoji="🔥">🔥</button>
+                            <button class="sticker-btn" data-emoji="⚡">⚡</button>
+                            <button class="sticker-btn" data-emoji="✅">✅</button>
+                            <button class="sticker-btn" data-emoji="💥">💥</button>
+                            <button class="sticker-btn" data-emoji="🎯">🎯</button>
+                            <button class="sticker-btn" data-emoji="💰">💰</button>
+                            <button class="sticker-btn" data-emoji="🚀">🚀</button>
+                            <button class="sticker-btn" data-emoji="⭐">⭐</button>
+                            <button class="sticker-btn" data-emoji="❤️">❤️</button>
+                            <button class="sticker-btn" data-emoji="📦">📦</button>
+                            <button class="sticker-btn" data-emoji="🏆">🏆</button>
+                            <button class="sticker-btn" data-emoji="👇">👇</button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- ===== CENTER: Canvas Preview ===== -->
+                <div class="pd-canvas-area">
+                    <div class="canvas-toolbar">
+                        <button class="tool-btn" id="zoom-out-btn" title="Thu nhỏ"><i class="fa-solid fa-minus"></i></button>
+                        <span id="zoom-label" class="zoom-label">100%</span>
+                        <button class="tool-btn" id="zoom-in-btn" title="Phóng to"><i class="fa-solid fa-plus"></i></button>
+                        <div style="flex:1"></div>
+                        <button class="tool-btn active" id="mode-move" title="Di chuyển"><i class="fa-solid fa-arrows-up-down-left-right"></i></button>
+                        <button class="tool-btn" id="undo-btn" title="Hoàn tác"><i class="fa-solid fa-rotate-left"></i></button>
+                        <button class="tool-btn" id="redo-btn" title="Làm lại"><i class="fa-solid fa-rotate-right"></i></button>
+                        <button class="tool-btn" id="clear-btn" title="Xóa tất cả text"><i class="fa-solid fa-eraser"></i></button>
+                    </div>
+                    <div class="canvas-scroller">
+                        <div class="canvas-wrapper" id="canvas-wrapper">
+                            <canvas id="main-canvas"></canvas>
+                            <!-- Drag handles rendered over canvas -->
+                            <div id="drag-layer"></div>
+                        </div>
+                    </div>
+                    <!-- Download bar -->
+                    <div class="canvas-footer">
+                        <div class="quality-row">
+                            <label class="ctrl-lbl">Chất lượng</label>
+                            <select id="export-quality">
+                                <option value="1.0">Max (PNG lossless)</option>
+                                <option value="0.95" selected>Cao (JPG 95%)</option>
+                                <option value="0.8">Trung bình (JPG 80%)</option>
+                            </select>
+                        </div>
+                        <button class="btn-download" id="download-btn"><i class="fa-solid fa-download"></i> Download ảnh</button>
+                    </div>
+                </div>
+
+                <!-- ===== RIGHT: Active text editor + Post composer ===== -->
+                <div class="pd-right">
+
+                    <!-- Active text format panel -->
+                    <div class="ctrl-section" id="text-format-panel" style="display:none">
+                        <div class="ctrl-title"><i class="fa-solid fa-sliders"></i> Chỉnh text đang chọn</div>
+
+                        <div class="form-group-sm">
+                            <label>Nội dung</label>
+                            <textarea id="active-text-content" rows="2"></textarea>
+                        </div>
+                        <div class="ctrl-row">
+                            <label class="ctrl-lbl">Font</label>
+                            <select id="active-font">
+                                <option value="Oswald">Oswald</option>
+                                <option value="Bebas Neue">Bebas Neue</option>
+                                <option value="Anton">Anton</option>
+                                <option value="Montserrat">Montserrat</option>
+                                <option value="Poppins">Poppins</option>
+                                <option value="Roboto">Roboto</option>
+                                <option value="Playfair Display">Playfair Display</option>
+                                <option value="Dancing Script">Dancing Script</option>
+                            </select>
+                        </div>
+                        <div class="ctrl-row">
+                            <label class="ctrl-lbl">Cỡ chữ</label>
+                            <input type="range" id="active-size" min="12" max="300" value="60" style="flex:1">
+                            <span id="active-size-val" class="val-badge">60</span>
+                        </div>
+                        <div class="ctrl-row">
+                            <label class="ctrl-lbl">Màu chữ</label>
+                            <input type="color" id="active-color" value="#ffffff">
+                            <label class="ctrl-lbl" style="margin-left:.75rem">Đậm</label>
+                            <input type="checkbox" id="active-bold" checked>
+                        </div>
+                        <div class="ctrl-row">
+                            <label class="ctrl-lbl">Viền chữ</label>
+                            <input type="color" id="active-stroke-color" value="#000000">
+                            <input type="range" id="active-stroke" min="0" max="20" value="2" style="flex:1">
+                            <span id="active-stroke-val" class="val-badge">2</span>
+                        </div>
+                        <div class="ctrl-row">
+                            <label class="ctrl-lbl">Bóng</label>
+                            <input type="range" id="active-shadow" min="0" max="30" value="5" style="flex:1">
+                            <span id="active-shadow-val" class="val-badge">5</span>
+                        </div>
+                        <div class="ctrl-row">
+                            <label class="ctrl-lbl">Trong suốt</label>
+                            <input type="range" id="active-opacity" min="0" max="100" value="100" style="flex:1">
+                            <span id="active-opacity-val" class="val-badge">100%</span>
+                        </div>
+                        <div class="ctrl-row">
+                            <label class="ctrl-lbl">Căn chỉnh</label>
+                            <div class="align-btns">
+                                <button class="align-btn active" data-align="left"><i class="fa-solid fa-align-left"></i></button>
+                                <button class="align-btn" data-align="center"><i class="fa-solid fa-align-center"></i></button>
+                                <button class="align-btn" data-align="right"><i class="fa-solid fa-align-right"></i></button>
+                            </div>
+                        </div>
+                        <div class="ctrl-row">
+                            <label class="ctrl-lbl">Nền text</label>
+                            <input type="color" id="active-bg-color" value="#facc15">
+                            <input type="range" id="active-bg-opacity" min="0" max="100" value="0" style="flex:1">
+                            <span id="active-bg-opacity-val" class="val-badge">0%</span>
+                        </div>
+                        <div class="ctrl-row">
+                            <button class="btn-ghost-sm" id="center-h-btn"><i class="fa-solid fa-arrows-left-right-to-line"></i> Giữa ngang</button>
+                            <button class="btn-ghost-sm" id="center-v-btn"><i class="fa-solid fa-arrows-up-down"></i> Giữa dọc</button>
+                            <button class="btn-ghost-sm" style="color:#ef4444" id="delete-layer-btn"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- Post Composer -->
+                    <div class="ctrl-section">
+                        <div class="ctrl-title"><i class="fa-brands fa-facebook"></i> Đăng bài Facebook Group</div>
+                        <div class="form-group-sm">
+                            <label>Caption / Nội dung bài đăng</label>
+                            <textarea id="post-caption" rows="5" placeholder="🔥 Sale off 50% hôm nay thôi!&#10;&#10;👇 Comment &quot;MUỐN&quot; để nhận ngay...&#10;&#10;#sale #deal #lazmall"></textarea>
+                        </div>
+                        <div class="form-group-sm">
+                            <label>Link Group Facebook</label>
+                            <input type="url" id="group-url" placeholder="https://www.facebook.com/groups/...">
+                        </div>
+                        <button class="btn-post" id="post-to-fb-btn">
+                            <i class="fa-brands fa-facebook"></i> Mở Group & Copy caption
+                        </button>
+                        <div class="post-note">
+                            <i class="fa-solid fa-circle-info"></i>
+                            <span>Facebook không cho phép app 3rd-party tự đăng vào group. Tool sẽ mở group trong tab mới và copy caption sẵn để bạn paste (Ctrl+V).</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Templates Modal -->
+<div class="modal" id="templates-modal">
+    <div class="modal-content modal-wide">
+        <span class="close-btn" id="close-templates">&times;</span>
+        <h2><i class="fa-solid fa-folder-open"></i> Templates đã lưu</h2>
+        <div id="templates-list"></div>
+        <div class="modal-actions"><button class="btn-ghost" id="close-templates-btn">Đóng</button></div>
+    </div>
+</div>
+
+<script src="post-designer.js"></script>
+</body>
+</html>

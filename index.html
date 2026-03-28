@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SoraTools - Workspace</title>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-layout">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fa-solid fa-layer-group"></i>
+                    <span>SoraTools</span>
+                </div>
+            </div>
+            
+            <div class="nav-section">
+                <p class="nav-label">Bộ công cụ</p>
+                <nav class="nav-menu">
+                    <a href="#" class="nav-item active">
+                        <i class="fa-solid fa-wallet"></i>
+                        <span>Quản lý chi tiêu</span>
+                    </a>
+                    <a href="todo.html" class="nav-item"><i class="fa-solid fa-list-check"></i><span>To-Do List</span></a>
+                    <a href="goals.html" class="nav-item"><i class="fa-solid fa-bullseye"></i><span>Mục tiêu hàng ngày</span></a>
+                    <a href="chat.html" class="nav-item nav-item-ai"><i class="fa-solid fa-robot"></i><span>Chat với AI</span></a>
+                    <a href="ads-report.html" class="nav-item nav-item-ads"><i class="fa-solid fa-chart-column"></i><span>Báo cáo Ads</span></a>
+                    <a href="research.html" class="nav-item nav-item-research"><i class="fa-solid fa-magnifying-glass-chart"></i><span>Product Research</span></a>
+                    <a href="ads-template.html" class="nav-item nav-item-template"><i class="fa-solid fa-wand-magic-sparkles"></i><span>Ads Template</span></a>
+                    <a href="ads-create.html" class="nav-item nav-item-create"><i class="fa-brands fa-facebook"></i><span>Tạo Quảng cáo</span></a>
+                    <a href="post-designer.html" class="nav-item nav-item-designer"><i class="fa-solid fa-pen-ruler"></i><span>Post Designer</span></a>
+
+                </nav>
+            </div>
+
+            <div class="sidebar-footer">
+                <div class="theme-toggle" id="theme-toggle">
+                    <i class="fa-solid fa-moon"></i>
+                    <span>Chế độ Tối</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Workspace -->
+        <main class="main-content">
+            <!-- Mobile Header (Visible only on small screens) -->
+            <header class="mobile-header">
+                <div class="logo">
+                    <i class="fa-solid fa-layer-group"></i>
+                    <span>SoraTools</span>
+                </div>
+                <div class="mobile-nav-toggle">
+                    <i class="fa-solid fa-bars"></i>
+                </div>
+            </header>
+
+            <div class="workspace">
+                <div class="workspace-header">
+                    <h2>Quản lý chi tiêu</h2>
+                    <p>Theo dõi thu chi và phân tích tổng quan tài chính cá nhân.</p>
+                </div>
+
+                <!-- Overview Cards -->
+                <section class="overview">
+                    <div class="card balance-card">
+                        <h3>Tổng số dư</h3>
+                        <h1 id="total-balance">0 ₫</h1>
+                    </div>
+                    <div class="card income-card">
+                        <div class="card-icon"><i class="fa-solid fa-arrow-trend-up"></i></div>
+                        <div class="card-info">
+                            <h3>Tổng thu</h3>
+                            <p id="total-income">0 ₫</p>
+                        </div>
+                    </div>
+                    <div class="card expense-card">
+                        <div class="card-icon"><i class="fa-solid fa-arrow-trend-down"></i></div>
+                        <div class="card-info">
+                            <h3>Tổng chi</h3>
+                            <p id="total-expense" class="danger">0 ₫</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Main Content Grid -->
+                <div class="content-grid">
+                    <!-- Transaction History -->
+                    <section class="transaction-section">
+                        <div class="section-header">
+                            <h2>Giao dịch gần đây</h2>
+                            <button id="add-btn" class="btn-primary"><i class="fa-solid fa-plus"></i> Thêm mới</button>
+                        </div>
+                        <div class="transaction-list" id="transaction-list">
+                            <div class="empty-state">Chưa có giao dịch. Hãy thêm giao dịch mới!</div>
+                        </div>
+                    </section>
+                    
+                    <!-- Chart / Visuals -->
+                    <section class="charts-section">
+                         <h2>Thống kê chi tiêu</h2>
+                         <div class="chart-container">
+                            <canvas id="expenseChart"></canvas>
+                         </div>
+                    </section>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Form (Thêm giao dịch) -->
+    <div class="modal" id="transaction-modal">
+        <div class="modal-content">
+            <span class="close-btn" id="close-modal">&times;</span>
+            <h2>Thêm Giao Dịch Mới</h2>
+            <form id="transaction-form">
+                <div class="form-group">
+                    <label>Loại giao dịch</label>
+                    <div class="type-toggle">
+                        <input type="radio" id="type-expense" name="type" value="expense" checked>
+                        <label for="type-expense">Chi tiêu</label>
+                        <input type="radio" id="type-income" name="type" value="income">
+                        <label for="type-income">Thu nhập</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="amount">Số tiền (₫)</label>
+                    <input type="number" id="amount" required placeholder="Ví dụ: 50000">
+                </div>
+                <div class="form-group">
+                    <label for="category">Danh mục</label>
+                    <select id="category" required>
+                        <!-- Danh mục chi tiêu -->
+                        <option value="Eating">Ăn uống</option>
+                        <option value="Transport">Di chuyển</option>
+                        <option value="Shopping">Mua sắm</option>
+                        <option value="Bills">Hóa đơn</option>
+                        <option value="Entertainment">Giải trí</option>
+                        <option value="Health">Sức khỏe</option>
+                        <!-- Danh mục thu nhập -->
+                        <option value="Salary" class="income-opt" style="display:none;">Tiền lương</option>
+                        <option value="Investment" class="income-opt" style="display:none;">Đầu tư</option>
+                        <option value="Other">Khác</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="date">Ngày thực hiện</label>
+                    <input type="date" id="date" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">Mô tả thêm (Tùy chọn)</label>
+                    <input type="text" id="description" placeholder="Ghi chú về khoản tiền này...">
+                </div>
+                <button type="submit" class="btn-submit">Lưu Giao Dịch</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Chart.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- App Logic -->
+    <script src="script.js"></script>
+</body>
+</html>

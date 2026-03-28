@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SoraTools - Ads Template Generator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="ads-template.css">
+</head>
+<body>
+<div class="app-layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo"><i class="fa-solid fa-layer-group"></i><span>SoraTools</span></div>
+        </div>
+        <div class="nav-section">
+            <p class="nav-label">Bộ công cụ</p>
+            <nav class="nav-menu">
+                <a href="index.html"        class="nav-item"><i class="fa-solid fa-wallet"></i><span>Quản lý chi tiêu</span></a>
+                <a href="todo.html"         class="nav-item"><i class="fa-solid fa-list-check"></i><span>To-Do List</span></a>
+                <a href="goals.html"        class="nav-item"><i class="fa-solid fa-bullseye"></i><span>Mục tiêu hàng ngày</span></a>
+                <a href="chat.html"         class="nav-item nav-item-ai"><i class="fa-solid fa-robot"></i><span>Chat với AI</span></a>
+                <a href="ads-report.html"   class="nav-item nav-item-ads"><i class="fa-solid fa-chart-column"></i><span>Báo cáo Ads</span></a>
+                <a href="research.html"     class="nav-item nav-item-research"><i class="fa-solid fa-magnifying-glass-chart"></i><span>Product Research</span></a>
+                <a href="ads-template.html" class="nav-item nav-item-template active"><i class="fa-solid fa-wand-magic-sparkles"></i><span>Ads Template</span></a>
+                <a href="ads-create.html" class="nav-item nav-item-create"><i class="fa-brands fa-facebook"></i><span>Tạo Quảng cáo</span></a>
+                <a href="post-designer.html" class="nav-item nav-item-designer"><i class="fa-solid fa-pen-ruler"></i><span>Post Designer</span></a>
+            </nav>
+        </div>
+        <div class="sidebar-footer">
+            <div class="theme-toggle" id="theme-toggle"><i class="fa-solid fa-moon"></i><span>Chế độ Tối</span></div>
+        </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main-content">
+        <div class="workspace">
+
+            <!-- Header -->
+            <div class="at-header">
+                <div>
+                    <h2><i class="fa-solid fa-wand-magic-sparkles"></i> Ads Template Generator</h2>
+                    <p>Tự động tạo script quảng cáo Facebook & TikTok bằng Gemini AI</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-ghost-sm" id="saved-btn"><i class="fa-solid fa-bookmark"></i> Đã lưu (<span id="saved-count">0</span>)</button>
+                    <button class="btn-ghost-sm" id="at-settings-btn"><i class="fa-solid fa-gear"></i> Cấu hình AI</button>
+                </div>
+            </div>
+
+            <!-- Main layout -->
+            <div class="at-layout">
+
+                <!-- LEFT: Input Form -->
+                <div class="at-form-panel">
+                    <div class="panel-header"><i class="fa-solid fa-pen-to-square"></i> Thông tin sản phẩm</div>
+
+                    <div class="form-group">
+                        <label>Tên / Mô tả sản phẩm <span style="color:#ef4444">*</span></label>
+                        <input type="text" id="at-product" placeholder="VD: Máy rửa mặt silicon 3D, làm sạch sâu, chống thấm nước...">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Điểm bán hàng nổi bật (USP)</label>
+                        <textarea id="at-usp" rows="2" placeholder="VD: Loại bỏ 99.9% bụi bẩn, dùng được cho da nhạy cảm, pin 30 ngày, giá chỉ 299k..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Đối tượng khách hàng</label>
+                        <input type="text" id="at-audience" placeholder="VD: Nữ 20-35 tuổi, da dầu, bận rộn, quan tâm skincare...">
+                    </div>
+
+                    <!-- Platform selector -->
+                    <div class="form-group">
+                        <label>Nền tảng</label>
+                        <div class="platform-pick" id="platform-pick">
+                            <button class="plat-btn active" data-p="tiktok"><i class="fa-brands fa-tiktok"></i> TikTok</button>
+                            <button class="plat-btn" data-p="facebook"><i class="fa-brands fa-facebook"></i> Facebook</button>
+                            <button class="plat-btn" data-p="both"><i class="fa-solid fa-layer-group"></i> Cả hai</button>
+                        </div>
+                    </div>
+
+                    <!-- Hook type -->
+                    <div class="form-group">
+                        <label>Loại Hook / Format</label>
+                        <div class="hook-grid" id="hook-grid">
+                            <button class="hook-btn active" data-h="problem-solution">😤 Vấn đề → Giải pháp</button>
+                            <button class="hook-btn" data-h="before-after">✨ Before / After</button>
+                            <button class="hook-btn" data-h="testimonial">🗣️ Testimonial</button>
+                            <button class="hook-btn" data-h="curiosity">🤔 Gây tò mò</button>
+                            <button class="hook-btn" data-h="urgency">⏰ Urgency / Scarcity</button>
+                            <button class="hook-btn" data-h="story">📖 Kể chuyện</button>
+                        </div>
+                    </div>
+
+                    <!-- Options row -->
+                    <div class="at-options">
+                        <div class="opt-item">
+                            <label>Số lượng script</label>
+                            <select id="at-count">
+                                <option value="3">3 scripts</option>
+                                <option value="5" selected>5 scripts</option>
+                                <option value="7">7 scripts</option>
+                            </select>
+                        </div>
+                        <div class="opt-item">
+                            <label>Thị trường</label>
+                            <select id="at-market">
+                                <option value="Philippines">🇵🇭 Philippines</option>
+                                <option value="Vietnam">🇻🇳 Việt Nam</option>
+                                <option value="Indonesia">🇮🇩 Indonesia</option>
+                            </select>
+                        </div>
+                        <div class="opt-item">
+                            <label>Ngôn ngữ</label>
+                            <select id="at-lang">
+                                <option value="Tiếng Việt">🇻🇳 Tiếng Việt</option>
+                                <option value="Tiếng Anh">🇺🇸 Tiếng Anh</option>
+                                <option value="Tagalog">🇵🇭 Tagalog</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button class="btn-generate" id="generate-btn">
+                        <i class="fa-solid fa-sparkles"></i> Tạo Script Tự Động
+                    </button>
+
+                    <!-- Quick fill examples -->
+                    <div class="quick-examples">
+                        <span class="ex-label">Ví dụ nhanh:</span>
+                        <button class="ex-btn" data-product="Máy rửa mặt silicon" data-usp="Làm sạch sâu 99.9%, pin 30 ngày, chống thấm nước, giá 299k" data-aud="Nữ 20-35 tuổi, da dầu, bận rộn">🫧 Máy rửa mặt</button>
+                        <button class="ex-btn" data-product="Đèn LED grow light trồng cây trong nhà" data-usp="Toàn quang phổ, tiết kiệm 80% điện, tăng trưởng 3x, timer tự động" data-aud="Người yêu cây cối, sống chung cư, không có ban công">🌱 Đèn cây</button>
+                        <button class="ex-btn" data-product="Bình giữ nhiệt 1000ml chống thấm" data-usp="Giữ lạnh 24h giữ nóng 12h, không BPA, có filter lọc, 350k" data-aud="Dân văn phòng, gym goer, 22-40 tuổi">🧊 Bình giữ nhiệt</button>
+                    </div>
+                </div>
+
+                <!-- RIGHT: Results -->
+                <div class="at-results-panel">
+                    <!-- Idle -->
+                    <div class="at-idle" id="at-idle">
+                        <div class="idle-icon">✍️</div>
+                        <h3>Chưa có script nào</h3>
+                        <p>Điền thông tin sản phẩm và nhấn<br><strong>Tạo Script Tự Động</strong></p>
+                        <div class="at-tips">
+                            <div class="tip-item"><span>🎯</span> Script được tối ưu theo từng nền tảng (TikTok vs Facebook)</div>
+                            <div class="tip-item"><span>⏱️</span> Mỗi script có timestamp 0:00 và hook trong 3 giây</div>
+                            <div class="tip-item"><span>📋</span> Copy từng script hoặc export tất cả</div>
+                        </div>
+                    </div>
+
+                    <!-- Loading -->
+                    <div class="at-loading" id="at-loading" style="display:none">
+                        <div class="at-spinner"></div>
+                        <p>Gemini đang viết script quảng cáo...</p>
+                        <small>Thường mất 5-15 giây</small>
+                    </div>
+
+                    <!-- Scripts output -->
+                    <div id="at-output" style="display:none">
+                        <div class="output-topbar">
+                            <div id="output-meta" class="result-meta"></div>
+                            <div class="header-actions">
+                                <button class="btn-ghost-sm" id="export-all-btn"><i class="fa-solid fa-download"></i> Export tất cả</button>
+                                <button class="btn-ghost-sm" id="copy-all-btn"><i class="fa-solid fa-copy"></i> Copy tất cả</button>
+                            </div>
+                        </div>
+                        <div id="scripts-container"></div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<!-- Settings Modal -->
+<div class="modal" id="at-settings-modal">
+    <div class="modal-content">
+        <span class="close-btn" id="close-at-settings">&times;</span>
+        <h2><i class="fa-solid fa-gear"></i> Cấu hình Gemini AI</h2>
+        <div class="form-group">
+            <label>Gemini API Key</label>
+            <input type="password" id="at-key-input" placeholder="AIzaSy...">
+            <small>Lấy tại <a href="https://aistudio.google.com/apikey" target="_blank">Google AI Studio</a></small>
+        </div>
+        <div class="form-group">
+            <label>Model</label>
+            <select id="at-model-input">
+                <option value="gemini-2.0-flash">Gemini 2.0 Flash ⚡</option>
+                <option value="gemini-2.0-flash-lite">Gemini 2.0 Flash Lite 🧊</option>
+                <option value="gemini-2.5-pro-exp-03-25">Gemini 2.5 Pro 🔥</option>
+            </select>
+        </div>
+        <div class="modal-actions">
+            <button class="btn-ghost" id="close-at-settings-btn">Hủy</button>
+            <button class="btn-primary" id="save-at-settings-btn"><i class="fa-solid fa-floppy-disk"></i> Lưu</button>
+        </div>
+    </div>
+</div>
+
+<!-- Saved Scripts Modal -->
+<div class="modal" id="saved-modal">
+    <div class="modal-content modal-wide">
+        <span class="close-btn" id="close-saved">&times;</span>
+        <h2><i class="fa-solid fa-bookmark"></i> Script đã lưu</h2>
+        <div id="saved-list"></div>
+    </div>
+</div>
+
+<script src="ads-template.js"></script>
+</body>
+</html>

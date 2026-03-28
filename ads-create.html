@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SoraTools - Tạo Chiến dịch Quảng cáo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="ads-create.css">
+</head>
+<body>
+<div class="app-layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo"><i class="fa-solid fa-layer-group"></i><span>SoraTools</span></div>
+        </div>
+        <div class="nav-section">
+            <p class="nav-label">Bộ công cụ</p>
+            <nav class="nav-menu">
+                <a href="index.html"        class="nav-item"><i class="fa-solid fa-wallet"></i><span>Quản lý chi tiêu</span></a>
+                <a href="todo.html"         class="nav-item"><i class="fa-solid fa-list-check"></i><span>To-Do List</span></a>
+                <a href="goals.html"        class="nav-item"><i class="fa-solid fa-bullseye"></i><span>Mục tiêu hàng ngày</span></a>
+                <a href="chat.html"         class="nav-item nav-item-ai"><i class="fa-solid fa-robot"></i><span>Chat với AI</span></a>
+                <a href="ads-report.html"   class="nav-item nav-item-ads"><i class="fa-solid fa-chart-column"></i><span>Báo cáo Ads</span></a>
+                <a href="research.html"     class="nav-item nav-item-research"><i class="fa-solid fa-magnifying-glass-chart"></i><span>Product Research</span></a>
+                <a href="ads-template.html" class="nav-item nav-item-template"><i class="fa-solid fa-wand-magic-sparkles"></i><span>Ads Template</span></a>
+                <a href="ads-create.html"   class="nav-item nav-item-create active"><i class="fa-brands fa-facebook"></i><span>Tạo Quảng cáo</span></a>
+                <a href="post-designer.html" class="nav-item nav-item-designer"><i class="fa-solid fa-pen-ruler"></i><span>Post Designer</span></a>
+            </nav>
+        </div>
+        <div class="sidebar-footer">
+            <div class="theme-toggle" id="theme-toggle"><i class="fa-solid fa-moon"></i><span>Chế độ Tối</span></div>
+        </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="main-content">
+        <div class="workspace">
+
+            <!-- Page Header -->
+            <div class="ac-header">
+                <div>
+                    <h2><i class="fa-brands fa-facebook"></i> Tạo Chiến dịch Quảng cáo</h2>
+                    <p>Điền đầy đủ thông tin → Lưu template → Không bao giờ bỏ sót bước nào</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-ghost-sm" id="load-template-btn"><i class="fa-solid fa-folder-open"></i> Load Template</button>
+                    <button class="btn-ghost-sm" id="history-btn"><i class="fa-solid fa-clock-rotate-left"></i> Lịch sử</button>
+                    <button class="btn-ghost-sm" id="manage-profiles-btn"><i class="fa-solid fa-database"></i> Hồ sơ</button>
+                </div>
+            </div>
+
+            <!-- Progress steps -->
+            <div class="step-progress">
+                <div class="step-item active" data-step="1"><div class="step-circle">1</div><span>Chiến dịch</span></div>
+                <div class="step-line"></div>
+                <div class="step-item" data-step="2"><div class="step-circle">2</div><span>Tài khoản</span></div>
+                <div class="step-line"></div>
+                <div class="step-item" data-step="3"><div class="step-circle">3</div><span>Target</span></div>
+                <div class="step-line"></div>
+                <div class="step-item" data-step="4"><div class="step-circle">4</div><span>Creative</span></div>
+                <div class="step-line"></div>
+                <div class="step-item" data-step="5"><div class="step-circle">5</div><span>Review</span></div>
+            </div>
+
+            <!-- STEP PANELS -->
+            <div class="step-panels">
+
+                <!-- ===== STEP 1: Campaign Info ===== -->
+                <div class="step-panel active" id="step-1">
+                    <div class="panel-title"><i class="fa-solid fa-flag"></i> Thông tin Chiến dịch</div>
+                    <div class="form-grid-2">
+                        <div class="form-group span-2">
+                            <label>Tên chiến dịch <span class="req">*</span></label>
+                            <input type="text" id="campaign-name" placeholder="VD: [THÁNG 3] Máy rửa mặt - Philippines - TikTok - Video UGC 01">
+                        </div>
+                        <div class="form-group">
+                            <label>Mục tiêu quảng cáo <span class="req">*</span></label>
+                            <select id="campaign-objective">
+                                <option value="">-- Chọn mục tiêu --</option>
+                                <optgroup label="🏆 Chuyển đổi">
+                                    <option value="OUTCOME_SALES">Sales (Mua hàng)</option>
+                                    <option value="OUTCOME_LEADS">Lead Generation</option>
+                                    <option value="OUTCOME_TRAFFIC">Traffic (Click đến web)</option>
+                                </optgroup>
+                                <optgroup label="📣 Nhận thức">
+                                    <option value="OUTCOME_AWARENESS">Brand Awareness</option>
+                                    <option value="OUTCOME_ENGAGEMENT">Engagement (Tương tác)</option>
+                                    <option value="OUTCOME_VIDEO_VIEWS">Video Views</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Nền tảng <span class="req">*</span></label>
+                            <div class="checkbox-group">
+                                <label class="check-item"><input type="checkbox" name="platform" value="facebook" checked> <i class="fa-brands fa-facebook"></i> Facebook</label>
+                                <label class="check-item"><input type="checkbox" name="platform" value="instagram"> <i class="fa-brands fa-instagram"></i> Instagram</label>
+                                <label class="check-item"><input type="checkbox" name="platform" value="messenger"> <i class="fa-brands fa-facebook-messenger"></i> Messenger</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Ngân sách / ngày (USD) <span class="req">*</span></label>
+                            <div class="input-prefix-wrap">
+                                <span class="input-prefix">$</span>
+                                <input type="number" id="daily-budget" placeholder="10" min="1" step="0.5">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Chiến lược đặt giá thầu</label>
+                            <select id="bid-strategy">
+                                <option value="LOWEST_COST">Lowest Cost (Tự động)</option>
+                                <option value="COST_CAP">Cost Cap</option>
+                                <option value="BID_CAP">Bid Cap</option>
+                                <option value="MINIMUM_ROAS">Minimum ROAS</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Ngày bắt đầu <span class="req">*</span></label>
+                            <input type="datetime-local" id="start-date">
+                        </div>
+                        <div class="form-group">
+                            <label>Ngày kết thúc (để trống = chạy liên tục)</label>
+                            <input type="datetime-local" id="end-date">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== STEP 2: Account & Pixel ===== -->
+                <div class="step-panel" id="step-2">
+                    <div class="panel-title"><i class="fa-solid fa-server"></i> Tài khoản & Tracking</div>
+
+                    <div class="profile-hint">
+                        <i class="fa-solid fa-lightbulb"></i>
+                        Lưu hồ sơ tài khoản để điền nhanh: <button class="link-btn" id="quick-profile-btn">Chọn hồ sơ có sẵn</button>
+                    </div>
+
+                    <div class="form-grid-2">
+                        <div class="form-group">
+                            <label>ID Tài khoản quảng cáo <span class="req">*</span></label>
+                            <div class="input-tag-wrap">
+                                <span class="input-tag">act_</span>
+                                <input type="text" id="ad-account-id" placeholder="123456789012345">
+                            </div>
+                            <small>Lấy tại Business Manager → Tài khoản quảng cáo</small>
+                        </div>
+                        <div class="form-group">
+                            <label>Pixel ID <span class="req">*</span></label>
+                            <input type="text" id="pixel-id" placeholder="1234567890123456">
+                            <small>Events Manager → Pixel → Chi tiết</small>
+                        </div>
+                        <div class="form-group">
+                            <label>ID Fanpage <span class="req">*</span></label>
+                            <input type="text" id="page-id" placeholder="123456789012345">
+                            <small>Fanpage → Giới thiệu → ID trang</small>
+                        </div>
+                        <div class="form-group">
+                            <label>Sự kiện tối ưu hóa</label>
+                            <select id="optimization-event">
+                                <option value="PURCHASE">Purchase (Mua hàng)</option>
+                                <option value="INITIATE_CHECKOUT">Initiate Checkout</option>
+                                <option value="ADD_TO_CART">Add to Cart</option>
+                                <option value="LEAD">Lead</option>
+                                <option value="VIEW_CONTENT">View Content</option>
+                                <option value="COMPLETE_REGISTRATION">Complete Registration</option>
+                            </select>
+                        </div>
+                        <div class="form-group span-2">
+                            <label>Tên hồ sơ này (để lưu dùng lại)</label>
+                            <div style="display:flex;gap:.5rem">
+                                <input type="text" id="profile-name" placeholder="VD: Acc SoraFili - Pixel Main">
+                                <button class="btn-ghost-sm" id="save-profile-btn"><i class="fa-solid fa-floppy-disk"></i> Lưu hồ sơ</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== STEP 3: Target Audience ===== -->
+                <div class="step-panel" id="step-3">
+                    <div class="panel-title"><i class="fa-solid fa-crosshairs"></i> Target Đối tượng</div>
+                    <div class="form-grid-2">
+                        <div class="form-group">
+                            <label>Quốc gia / Khu vực <span class="req">*</span></label>
+                            <select id="target-country" multiple size="4" style="height:auto">
+                                <option value="PH" selected>🇵🇭 Philippines</option>
+                                <option value="VN">🇻🇳 Việt Nam</option>
+                                <option value="ID">🇮🇩 Indonesia</option>
+                                <option value="TH">🇹🇭 Thailand</option>
+                                <option value="MY">🇲🇾 Malaysia</option>
+                                <option value="SG">🇸🇬 Singapore</option>
+                                <option value="US">🇺🇸 United States</option>
+                            </select>
+                            <small>Giữ Ctrl để chọn nhiều</small>
+                        </div>
+                        <div class="form-group">
+                            <label>Độ tuổi</label>
+                            <div class="age-range">
+                                <div class="form-group" style="margin:0">
+                                    <label style="font-size:.75rem">Từ</label>
+                                    <input type="number" id="age-min" value="18" min="18" max="65">
+                                </div>
+                                <span style="color:var(--text-muted);padding-top:1.5rem">—</span>
+                                <div class="form-group" style="margin:0">
+                                    <label style="font-size:.75rem">Đến</label>
+                                    <input type="number" id="age-max" value="45" min="18" max="65">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Giới tính</label>
+                            <div class="radio-group">
+                                <label class="radio-item"><input type="radio" name="gender" value="all" checked> Tất cả</label>
+                                <label class="radio-item"><input type="radio" name="gender" value="male"> Nam</label>
+                                <label class="radio-item"><input type="radio" name="gender" value="female"> Nữ</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Ngôn ngữ</label>
+                            <select id="target-language">
+                                <option value="">Tất cả</option>
+                                <option value="en" selected>English</option>
+                                <option value="vi">Tiếng Việt</option>
+                                <option value="fil">Filipino/Tagalog</option>
+                                <option value="id">Bahasa Indonesia</option>
+                            </select>
+                        </div>
+                        <div class="form-group span-2">
+                            <label>Sở thích / Hành vi (mỗi dòng 1 mục)</label>
+                            <textarea id="interests" rows="3" placeholder="Online shopping&#10;Home improvement&#10;Beauty and personal care&#10;DIY & crafts"></textarea>
+                        </div>
+                        <div class="form-group span-2">
+                            <label>Custom Audience / Lookalike (ID, mỗi dòng 1 audience)</label>
+                            <textarea id="custom-audiences" rows="2" placeholder="23850123456789 (Lookalike 1% PH)&#10;23850987654321 (Retarget - View 75%)"></textarea>
+                        </div>
+                        <div class="form-group span-2">
+                            <label>Vị trí hiển thị (Placements)</label>
+                            <div class="checkbox-group wrap">
+                                <label class="check-item"><input type="checkbox" name="placement" value="feed" checked> Facebook Feed</label>
+                                <label class="check-item"><input type="checkbox" name="placement" value="reels" checked> Reels</label>
+                                <label class="check-item"><input type="checkbox" name="placement" value="story" checked> Stories</label>
+                                <label class="check-item"><input type="checkbox" name="placement" value="instream"> In-stream Video</label>
+                                <label class="check-item"><input type="checkbox" name="placement" value="ig_feed"> Instagram Feed</label>
+                                <label class="check-item"><input type="checkbox" name="placement" value="ig_story"> Instagram Story</label>
+                                <label class="check-item"><input type="checkbox" name="placement" value="audience_network"> Audience Network</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== STEP 4: Ad Creative ===== -->
+                <div class="step-panel" id="step-4">
+                    <div class="panel-title"><i class="fa-solid fa-photo-film"></i> Creative Quảng cáo</div>
+                    <div class="form-grid-2">
+                        <div class="form-group span-2">
+                            <label>Link Landing Page (Ladipage) <span class="req">*</span></label>
+                            <input type="url" id="landing-url" placeholder="https://ladipage.vn/...">
+                        </div>
+                        <div class="form-group span-2">
+                            <label>Video quảng cáo</label>
+                            <div class="video-upload-area" id="video-drop-zone">
+                                <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
+                                <p>Kéo thả video vào đây hoặc</p>
+                                <label class="btn-ghost-sm" style="cursor:pointer">
+                                    <i class="fa-solid fa-folder-open"></i> Chọn file
+                                    <input type="file" id="video-file" accept="video/*" style="display:none">
+                                </label>
+                                <small>MP4, MOV, AVI — Tối đa 4GB</small>
+                            </div>
+                            <div id="video-preview-wrap" style="display:none">
+                                <video id="video-preview" controls style="width:100%;max-height:260px;border-radius:8px;margin-top:.75rem"></video>
+                                <div class="video-info" id="video-info"></div>
+                                <button class="btn-ghost-sm" id="remove-video-btn" style="margin-top:.5rem"><i class="fa-solid fa-trash"></i> Xóa</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Hoặc nhập URL video (đã upload)</label>
+                            <input type="url" id="video-url" placeholder="https://video.fbcdn.net/...">
+                        </div>
+                        <div class="form-group">
+                            <label>Facebook Video ID (nếu đã có)</label>
+                            <input type="text" id="video-fb-id" placeholder="1234567890123456">
+                        </div>
+                        <div class="form-group span-2">
+                            <label>Tiêu đề quảng cáo (Headline)</label>
+                            <input type="text" id="ad-headline" placeholder="VD: Sạch sâu - Sáng da - Chỉ 299K ⚡" maxlength="40">
+                            <small><span id="headline-count">0</span>/40 ký tự</small>
+                        </div>
+                        <div class="form-group span-2">
+                            <label>Nội dung chính (Primary Text)</label>
+                            <textarea id="ad-body" rows="3" placeholder="Bạn đã thử đủ mọi loại sữa rửa mặt nhưng da vẫn không sạch sâu?&#10;&#10;→ Máy rửa mặt XYZ làm sạch 99.9% bụi bẩn chỉ trong 60 giây ✨" maxlength="125"></textarea>
+                            <small><span id="body-count">0</span>/125 ký tự</small>
+                        </div>
+                        <div class="form-group">
+                            <label>Nút kêu gọi hành động (CTA)</label>
+                            <select id="ad-cta">
+                                <option value="SHOP_NOW">Shop Now</option>
+                                <option value="LEARN_MORE">Learn More</option>
+                                <option value="GET_OFFER">Get Offer</option>
+                                <option value="ORDER_NOW">Order Now</option>
+                                <option value="BUY_NOW">Buy Now</option>
+                                <option value="SIGN_UP">Sign Up</option>
+                                <option value="CONTACT_US">Contact Us</option>
+                                <option value="MESSAGE_PAGE">Send Message</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Số lượng biến thể Ad</label>
+                            <select id="ad-variants">
+                                <option value="1">1 Ad (1 video)</option>
+                                <option value="3" selected>3 Ads (A/B/C test)</option>
+                                <option value="5">5 Ads</option>
+                            </select>
+                        </div>
+                        <div class="form-group span-2">
+                            <label>Ghi chú nội bộ</label>
+                            <textarea id="ad-notes" rows="2" placeholder="VD: Test angle da dầu vs all-skin, budget 10$/ngày, pause nếu CPR > 40k..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== STEP 5: Review ===== -->
+                <div class="step-panel" id="step-5">
+                    <div class="panel-title"><i class="fa-solid fa-clipboard-check"></i> Xem lại & Lưu</div>
+                    <div id="review-content">
+                        <!-- Filled dynamically -->
+                    </div>
+                    <div class="review-actions">
+                        <button class="btn-ghost" id="save-draft-btn"><i class="fa-solid fa-floppy-disk"></i> Lưu nháp</button>
+                        <button class="btn-ghost" id="save-template-btn"><i class="fa-solid fa-bookmark"></i> Lưu thành Template</button>
+                        <button class="btn-ghost" id="export-brief-btn"><i class="fa-solid fa-file-export"></i> Export Brief</button>
+                        <a id="open-ads-manager-btn" href="https://business.facebook.com/adsmanager/" target="_blank" class="btn-primary"><i class="fa-brands fa-facebook"></i> Mở Ads Manager</a>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Navigation buttons -->
+            <div class="step-nav">
+                <button class="btn-ghost" id="prev-btn" style="display:none"><i class="fa-solid fa-arrow-left"></i> Trước</button>
+                <div style="flex:1"></div>
+                <button class="btn-primary" id="next-btn">Tiếp theo <i class="fa-solid fa-arrow-right"></i></button>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<!-- Profile Manager Modal -->
+<div class="modal" id="profiles-modal">
+    <div class="modal-content modal-wide">
+        <span class="close-btn" id="close-profiles">&times;</span>
+        <h2><i class="fa-solid fa-database"></i> Quản lý Hồ sơ Tài khoản</h2>
+        <p style="color:var(--text-muted);font-size:.85rem;margin-bottom:1.25rem">Lưu Ad Account, Pixel, Fanpage để điền nhanh khi tạo chiến dịch mới.</p>
+        <div id="profiles-list"></div>
+        <div class="modal-actions">
+            <button class="btn-ghost" id="close-profiles-btn">Đóng</button>
+        </div>
+    </div>
+</div>
+
+<!-- History Modal -->
+<div class="modal" id="history-modal">
+    <div class="modal-content modal-wide">
+        <span class="close-btn" id="close-history">&times;</span>
+        <h2><i class="fa-solid fa-clock-rotate-left"></i> Lịch sử Chiến dịch</h2>
+        <div id="history-list"></div>
+        <div class="modal-actions"><button class="btn-ghost" id="close-history-btn">Đóng</button></div>
+    </div>
+</div>
+
+<!-- Template Modal -->
+<div class="modal" id="template-modal">
+    <div class="modal-content modal-wide">
+        <span class="close-btn" id="close-template">&times;</span>
+        <h2><i class="fa-solid fa-folder-open"></i> Chọn Template</h2>
+        <div id="template-list"></div>
+        <div class="modal-actions"><button class="btn-ghost" id="close-template-btn">Đóng</button></div>
+    </div>
+</div>
+
+<script src="ads-create.js"></script>
+</body>
+</html>

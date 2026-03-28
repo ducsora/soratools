@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SoraTools - Mục tiêu hàng ngày</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="goals.css">
+</head>
+<body>
+    <div class="app-layout">
+
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fa-solid fa-layer-group"></i>
+                    <span>SoraTools</span>
+                </div>
+            </div>
+            <div class="nav-section">
+                <p class="nav-label">Bộ công cụ</p>
+                <nav class="nav-menu">
+                    <a href="index.html" class="nav-item">
+                        <i class="fa-solid fa-wallet"></i>
+                        <span>Quản lý chi tiêu</span>
+                    </a>
+                    <a href="todo.html" class="nav-item"><i class="fa-solid fa-list-check"></i><span>To-Do List</span></a>
+                    <a href="goals.html" class="nav-item active"><i class="fa-solid fa-bullseye"></i><span>Mục tiêu hàng ngày</span></a>
+                    <a href="chat.html" class="nav-item nav-item-ai"><i class="fa-solid fa-robot"></i><span>Chat với AI</span></a>
+                    <a href="ads-report.html" class="nav-item nav-item-ads"><i class="fa-solid fa-chart-column"></i><span>Báo cáo Ads</span></a>
+                    <a href="research.html" class="nav-item nav-item-research"><i class="fa-solid fa-magnifying-glass-chart"></i><span>Product Research</span></a>
+                    <a href="ads-template.html" class="nav-item nav-item-template"><i class="fa-solid fa-wand-magic-sparkles"></i><span>Ads Template</span></a>
+                    <a href="ads-create.html" class="nav-item nav-item-create"><i class="fa-brands fa-facebook"></i><span>Tạo Quảng cáo</span></a>
+                    <a href="post-designer.html" class="nav-item nav-item-designer"><i class="fa-solid fa-pen-ruler"></i><span>Post Designer</span></a>
+
+                </nav>
+            </div>
+            <div class="sidebar-footer">
+                <div class="theme-toggle" id="theme-toggle">
+                    <i class="fa-solid fa-moon"></i>
+                    <span>Chế độ Tối</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Workspace -->
+        <main class="main-content">
+            <header class="mobile-header">
+                <div class="logo">
+                    <i class="fa-solid fa-layer-group"></i>
+                    <span>SoraTools</span>
+                </div>
+                <div class="mobile-nav-toggle">
+                    <i class="fa-solid fa-bars"></i>
+                </div>
+            </header>
+
+            <div class="workspace">
+                <div class="workspace-header">
+                    <h2>Mục tiêu hàng ngày</h2>
+                    <p id="today-date">Hôm nay</p>
+                </div>
+
+                <!-- Progress Overview -->
+                <div class="goals-overview">
+                    <div class="progress-card card">
+                        <div class="progress-ring-wrapper">
+                            <svg class="progress-ring" viewBox="0 0 120 120">
+                                <circle class="ring-bg" cx="60" cy="60" r="48"/>
+                                <circle class="ring-fill" id="ring-fill" cx="60" cy="60" r="48"/>
+                            </svg>
+                            <div class="progress-center">
+                                <span id="progress-pct">0%</span>
+                            </div>
+                        </div>
+                        <div class="progress-info">
+                            <h3>Tiến độ hôm nay</h3>
+                            <p id="progress-summary">0 / 0 mục tiêu hoàn thành</p>
+                            <div class="motivation-badge" id="motivation-badge">Hãy bắt đầu nào! 💪</div>
+                        </div>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="card stat-card">
+                            <i class="fa-solid fa-fire"></i>
+                            <div>
+                                <h4 id="streak-val">0</h4>
+                                <p>Ngày liên tiếp</p>
+                            </div>
+                        </div>
+                        <div class="card stat-card">
+                            <i class="fa-solid fa-trophy"></i>
+                            <div>
+                                <h4 id="completed-val">0</h4>
+                                <p>Tổng hoàn thành</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Goals Section -->
+                <div class="goals-main">
+                    <!-- Daily Goal (Main) -->
+                    <div class="card goal-main-card">
+                        <div class="goal-card-header">
+                            <h3><i class="fa-solid fa-star"></i> Mục tiêu chính hôm nay</h3>
+                            <button class="btn-icon" id="edit-main-goal-btn" title="Chỉnh sửa">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </button>
+                        </div>
+                        <div class="main-goal-display" id="main-goal-display">
+                            <span class="placeholder-text">Chưa đặt mục tiêu chính. Nhấn <i class="fa-solid fa-pen-to-square"></i> để thiết lập.</span>
+                        </div>
+                        <div class="main-goal-input" id="main-goal-input" style="display:none;">
+                            <input type="text" id="main-goal-text" placeholder="Ví dụ: Hoàn thành bài báo cáo tháng 3...">
+                            <button class="btn-primary" id="save-main-goal-btn">Lưu lại</button>
+                        </div>
+                    </div>
+
+                    <!-- Tasks list -->
+                    <div class="card tasks-card">
+                        <div class="goal-card-header">
+                            <h3><i class="fa-solid fa-list-ul"></i> Danh sách nhiệm vụ</h3>
+                            <button class="btn-primary" id="add-task-btn">
+                                <i class="fa-solid fa-plus"></i> Thêm nhiệm vụ
+                            </button>
+                        </div>
+
+                        <div id="task-list">
+                            <!-- rendered by JS -->
+                        </div>
+
+                        <!-- Add task inline form -->
+                        <div class="task-add-form" id="task-add-form" style="display:none;">
+                            <input type="text" id="new-task-input" placeholder="Tên nhiệm vụ...">
+                            <div class="task-form-actions">
+                                <select id="task-priority">
+                                    <option value="high">🔴 Cao</option>
+                                    <option value="medium" selected>🟡 Trung bình</option>
+                                    <option value="low">🟢 Thấp</option>
+                                </select>
+                                <button class="btn-primary btn-sm" id="confirm-add-task">Thêm</button>
+                                <button class="btn-ghost btn-sm" id="cancel-add-task">Hủy</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Reset daily button area -->
+                    <div class="reset-area">
+                        <button class="btn-danger-outline" id="reset-day-btn">
+                            <i class="fa-solid fa-rotate-right"></i> Đặt lại ngày mới
+                        </button>
+                        <p>Đặt lại sẽ bỏ tick tất cả nhiệm vụ để bắt đầu ngày mới.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="goals.js"></script>
+</body>
+</html>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SoraTools - To-Do List</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="todo.css">
+</head>
+<body>
+    <div class="app-layout">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fa-solid fa-layer-group"></i>
+                    <span>SoraTools</span>
+                </div>
+            </div>
+            <div class="nav-section">
+                <p class="nav-label">Bộ công cụ</p>
+                <nav class="nav-menu">
+                    <a href="index.html" class="nav-item"><i class="fa-solid fa-wallet"></i><span>Quản lý chi tiêu</span></a>
+                    <a href="todo.html" class="nav-item active"><i class="fa-solid fa-list-check"></i><span>To-Do List</span></a>
+                    <a href="goals.html" class="nav-item"><i class="fa-solid fa-bullseye"></i><span>Mục tiêu hàng ngày</span></a>
+                    <a href="chat.html" class="nav-item nav-item-ai"><i class="fa-solid fa-robot"></i><span>Chat với AI</span></a>
+                    <a href="ads-report.html" class="nav-item nav-item-ads"><i class="fa-solid fa-chart-column"></i><span>Báo cáo Ads</span></a>
+                    <a href="research.html" class="nav-item nav-item-research"><i class="fa-solid fa-magnifying-glass-chart"></i><span>Product Research</span></a>
+                    <a href="ads-template.html" class="nav-item nav-item-template"><i class="fa-solid fa-wand-magic-sparkles"></i><span>Ads Template</span></a>
+                    <a href="ads-create.html" class="nav-item nav-item-create"><i class="fa-brands fa-facebook"></i><span>Tạo Quảng cáo</span></a>
+                    <a href="post-designer.html" class="nav-item nav-item-designer"><i class="fa-solid fa-pen-ruler"></i><span>Post Designer</span></a>
+                </nav>
+            </div>
+            <div class="sidebar-footer">
+                <div class="theme-toggle" id="theme-toggle">
+                    <i class="fa-solid fa-moon"></i>
+                    <span>Chế độ Tối</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="workspace">
+
+                <!-- Header -->
+                <div class="todo-header">
+                    <div>
+                        <h2>To-Do List</h2>
+                        <p id="today-summary">Hôm nay: <span id="done-count">0</span>/<span id="total-count">0</span> nhiệm vụ · <span id="today-date"></span></p>
+                    </div>
+                    <div class="header-actions">
+                        <button class="btn-ghost-sm" id="clear-done-btn"><i class="fa-solid fa-broom"></i> Dọn dẹp xong</button>
+                        <button class="btn-primary" id="open-add-btn"><i class="fa-solid fa-plus"></i> Thêm nhiệm vụ</button>
+                    </div>
+                </div>
+
+                <!-- Stats Row -->
+                <div class="todo-stats">
+                    <div class="stat-pill all active" data-filter="all">
+                        <span class="pill-count" id="stat-all">0</span>
+                        <span>Tất cả</span>
+                    </div>
+                    <div class="stat-pill today" data-filter="today">
+                        <span class="pill-count" id="stat-today">0</span>
+                        <span>Hôm nay</span>
+                    </div>
+                    <div class="stat-pill pending" data-filter="pending">
+                        <span class="pill-count" id="stat-pending">0</span>
+                        <span>Đang làm</span>
+                    </div>
+                    <div class="stat-pill done" data-filter="done">
+                        <span class="pill-count" id="stat-done">0</span>
+                        <span>Hoàn thành</span>
+                    </div>
+                    <div class="stat-pill overdue" data-filter="overdue">
+                        <span class="pill-count" id="stat-overdue">0</span>
+                        <span>Quá hạn</span>
+                    </div>
+                </div>
+
+                <!-- Filter & Search -->
+                <div class="todo-toolbar">
+                    <div class="search-wrap">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" id="search-todo" placeholder="Tìm kiếm nhiệm vụ...">
+                    </div>
+                    <select id="filter-priority" class="tool-select">
+                        <option value="">Tất cả độ ưu tiên</option>
+                        <option value="high">🔴 Cao</option>
+                        <option value="medium">🟡 Trung bình</option>
+                        <option value="low">🟢 Thấp</option>
+                    </select>
+                    <select id="filter-category" class="tool-select">
+                        <option value="">Tất cả danh mục</option>
+                        <option value="work">💼 Công việc</option>
+                        <option value="personal">🏠 Cá nhân</option>
+                        <option value="health">💪 Sức khỏe</option>
+                        <option value="finance">💰 Tài chính</option>
+                        <option value="other">📌 Khác</option>
+                    </select>
+                    <select id="sort-tasks" class="tool-select">
+                        <option value="created">Mới nhất trước</option>
+                        <option value="due">Đến hạn sớm</option>
+                        <option value="priority">Ưu tiên cao nhất</option>
+                        <option value="alpha">A → Z</option>
+                    </select>
+                </div>
+
+                <!-- Task List -->
+                <div id="task-list"></div>
+
+                <!-- Empty state -->
+                <div class="empty-state" id="empty-state" style="display:none;">
+                    <div class="empty-icon">📋</div>
+                    <h3>Chưa có nhiệm vụ nào!</h3>
+                    <p>Nhấn "Thêm nhiệm vụ" để bắt đầu.</p>
+                    <button class="btn-primary" onclick="document.getElementById('open-add-btn').click()">
+                        <i class="fa-solid fa-plus"></i> Tạo nhiệm vụ đầu tiên
+                    </button>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Add/Edit Task Modal -->
+    <div class="modal" id="task-modal">
+        <div class="modal-content">
+            <span class="close-btn" id="close-modal">&times;</span>
+            <h2 id="modal-title"><i class="fa-solid fa-plus"></i> Thêm nhiệm vụ mới</h2>
+
+            <div class="form-group">
+                <label>Tiêu đề <span class="required">*</span></label>
+                <input type="text" id="task-title" placeholder="Ví dụ: Gọi cho khách hàng ABC..." maxlength="120">
+            </div>
+
+            <div class="form-group">
+                <label>Ghi chú (tuỳ chọn)</label>
+                <textarea id="task-note" rows="2" placeholder="Thêm chi tiết, link, hoặc ghi chú..."></textarea>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Độ ưu tiên</label>
+                    <div class="priority-pick" id="priority-pick">
+                        <button class="prio-btn" data-p="high">🔴 Cao</button>
+                        <button class="prio-btn active" data-p="medium">🟡 Trung bình</button>
+                        <button class="prio-btn" data-p="low">🟢 Thấp</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Danh mục</label>
+                    <select id="task-category" class="tool-select">
+                        <option value="work">💼 Công việc</option>
+                        <option value="personal">🏠 Cá nhân</option>
+                        <option value="health">💪 Sức khỏe</option>
+                        <option value="finance">💰 Tài chính</option>
+                        <option value="other">📌 Khác</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Ngày đến hạn</label>
+                    <input type="date" id="task-due">
+                </div>
+                <div class="form-group">
+                    <label>Giờ đến hạn</label>
+                    <input type="time" id="task-time">
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-ghost" id="cancel-modal-btn">Hủy</button>
+                <button class="btn-primary" id="save-task-btn"><i class="fa-solid fa-floppy-disk"></i> Lưu nhiệm vụ</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="todo.js"></script>
+</body>
+</html>

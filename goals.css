@@ -1,0 +1,398 @@
+/* ====== Goals Page Specific Styles ====== */
+
+/* Overview Grid */
+.goals-overview {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+@media (max-width: 768px) {
+    .goals-overview { grid-template-columns: 1fr; }
+}
+
+/* Progress Ring Card */
+.progress-card {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    padding: 2rem;
+}
+
+.progress-ring-wrapper {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    flex-shrink: 0;
+}
+
+.progress-ring {
+    width: 120px;
+    height: 120px;
+    transform: rotate(-90deg);
+}
+
+.ring-bg {
+    fill: none;
+    stroke: var(--border-color);
+    stroke-width: 10;
+}
+
+.ring-fill {
+    fill: none;
+    stroke: var(--primary-color);
+    stroke-width: 10;
+    stroke-linecap: round;
+    stroke-dasharray: 301.6;
+    stroke-dashoffset: 301.6;
+    transition: stroke-dashoffset 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.progress-center {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.progress-info h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+}
+
+.progress-info p {
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+}
+
+.motivation-badge {
+    display: inline-block;
+    background-color: rgba(250, 204, 21, 0.15);
+    color: var(--primary-color);
+    padding: 0.35rem 0.9rem;
+    border-radius: 99px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border: 1px solid rgba(250, 204, 21, 0.3);
+}
+
+/* Stat Cards */
+.stats-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.stat-card {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1.5rem;
+}
+
+.stat-card > i {
+    font-size: 2rem;
+    color: var(--primary-color);
+    width: 40px;
+    text-align: center;
+}
+
+.stat-card h4 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.stat-card p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+/* Goals Main Content */
+.goals-main {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.goal-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
+}
+
+.goal-card-header h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.goal-card-header h3 i {
+    color: var(--primary-color);
+}
+
+.btn-icon {
+    background: none;
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    font-size: 1rem;
+}
+
+.btn-icon:hover {
+    background-color: rgba(250, 204, 21, 0.1);
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+/* Main Goal Display */
+.goal-main-card {
+    padding: 1.75rem;
+}
+
+.main-goal-display {
+    font-size: 1.2rem;
+    font-weight: 600;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    color: var(--text-main);
+}
+
+.placeholder-text {
+    font-size: 1rem;
+    color: var(--text-muted);
+    font-style: italic;
+    font-weight: 400;
+}
+
+.main-goal-input {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-top: 0.5rem;
+}
+
+.main-goal-input input {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-family: 'UTM Avo', sans-serif;
+    font-size: 1rem;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+}
+
+.main-goal-input input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.2);
+}
+
+/* Tasks Card */
+.tasks-card {
+    padding: 1.75rem;
+}
+
+/* Individual Task Item */
+.task-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 0.75rem;
+    transition: all 0.2s;
+    background-color: var(--bg-color);
+}
+
+.task-item:hover {
+    border-color: var(--primary-color);
+    box-shadow: 0 2px 8px rgba(250, 204, 21, 0.08);
+}
+
+.task-item.completed {
+    opacity: 0.55;
+}
+
+.task-checkbox {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 2px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    color: transparent;
+    font-size: 0.75rem;
+}
+
+.task-item.completed .task-checkbox {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: var(--btn-text);
+}
+
+.task-text {
+    flex: 1;
+    font-weight: 500;
+    color: var(--text-main);
+    transition: all 0.2s;
+}
+
+.task-item.completed .task-text {
+    text-decoration: line-through;
+}
+
+.task-priority-badge {
+    font-size: 0.78rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 99px;
+    font-weight: 600;
+}
+
+.badge-high { background: rgba(220,38,38,0.12); color: #dc2626; }
+.badge-medium { background: rgba(250,204,21,0.15); color: #ca8a04; }
+.badge-low { background: rgba(22,163,74,0.12); color: #16a34a; }
+
+.task-delete {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    opacity: 0;
+    transition: all 0.2s;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+.task-item:hover .task-delete {
+    opacity: 1;
+    color: var(--danger);
+}
+
+.empty-tasks {
+    text-align: center;
+    padding: 2.5rem 1rem;
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+/* Add Task Form */
+.task-add-form {
+    margin-top: 1rem;
+    background-color: var(--bg-color);
+    border: 1px dashed var(--border-color);
+    border-radius: 10px;
+    padding: 1rem;
+}
+
+.task-add-form input {
+    width: 100%;
+    padding: 0.7rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-family: 'UTM Avo', sans-serif;
+    font-size: 0.95rem;
+    background-color: var(--card-bg);
+    color: var(--text-main);
+    margin-bottom: 0.75rem;
+}
+
+.task-add-form input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.task-form-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.task-form-actions select {
+    padding: 0.5rem 0.8rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-family: 'UTM Avo', sans-serif;
+    font-size: 0.9rem;
+    background-color: var(--card-bg);
+    color: var(--text-main);
+    cursor: pointer;
+}
+
+.btn-sm {
+    padding: 0.5rem 1.1rem !important;
+    font-size: 0.9rem !important;
+}
+
+.btn-ghost {
+    background: none;
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'UTM Avo', sans-serif;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.btn-ghost:hover {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+}
+
+/* Reset area */
+.reset-area {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.reset-area p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.btn-danger-outline {
+    background: none;
+    border: 1px solid var(--danger);
+    color: var(--danger);
+    padding: 0.65rem 1.25rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'UTM Avo', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s;
+}
+
+.btn-danger-outline:hover {
+    background-color: rgba(220,38,38,0.1);
+}

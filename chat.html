@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SoraTools - Chat với AI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="chat.css">
+</head>
+<body>
+    <div class="app-layout">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fa-solid fa-layer-group"></i>
+                    <span>SoraTools</span>
+                </div>
+            </div>
+            <div class="nav-section">
+                <p class="nav-label">Bộ công cụ</p>
+                <nav class="nav-menu">
+                    <a href="personal.html"      class="nav-item nav-item-personal"><i class="fa-solid fa-user"></i><span>Cá nhân</span></a>
+                    <a href="chat.html"          class="nav-item nav-item-ai active"><i class="fa-solid fa-robot"></i><span>Chat với AI</span></a>
+                    <a href="ads-report.html"    class="nav-item nav-item-ads"><i class="fa-solid fa-chart-column"></i><span>Báo cáo Ads</span></a>
+                    <a href="research.html"      class="nav-item nav-item-research"><i class="fa-solid fa-magnifying-glass-chart"></i><span>Product Research</span></a>
+                    <a href="post-designer.html" class="nav-item nav-item-designer"><i class="fa-solid fa-pen-ruler"></i><span>Post Designer</span></a>
+                </nav>
+            </div>
+            <div class="sidebar-footer">
+                <div class="theme-toggle" id="theme-toggle">
+                    <i class="fa-solid fa-moon"></i>
+                    <span>Chế độ Tối</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Chat Area -->
+        <main class="main-content">
+            <div class="chat-layout">
+
+                <!-- Chat Header -->
+                <div class="chat-header">
+                    <div class="chat-header-info">
+                        <div class="ai-avatar">
+                            <i class="fa-solid fa-robot"></i>
+                            <span class="ai-status-dot"></span>
+                        </div>
+                        <div>
+                            <h2>Sora AI</h2>
+                            <p id="chat-status">Sẵn sàng trò chuyện</p>
+                        </div>
+                    </div>
+                    <div class="chat-header-actions">
+                        <button class="btn-icon-sm" id="settings-btn" title="Cài đặt API Key">
+                            <i class="fa-solid fa-gear"></i>
+                        </button>
+                        <button class="btn-icon-sm" id="clear-btn" title="Xóa cuộc hội thoại">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Messages Area -->
+                <div class="messages-area" id="messages-area">
+                    <!-- Welcome state -->
+                    <div class="welcome-state" id="welcome-state">
+                        <div class="welcome-icon"><i class="fa-solid fa-robot"></i></div>
+                        <h3>Xin chào! Mình là Sora AI ✨</h3>
+                        <p>Mình có thể giúp bạn trả lời câu hỏi, phân tích dữ liệu, viết nội dung và nhiều hơn nữa.</p>
+                        <div class="suggestion-chips">
+                            <button class="chip" onclick="sendSuggestion('Phân tích chi tiêu của mình như thế nào là hợp lý?')">💰 Phân tích chi tiêu</button>
+                            <button class="chip" onclick="sendSuggestion('Làm thế nào để thiết lập mục tiêu hàng ngày hiệu quả?')">🎯 Lập kế hoạch mục tiêu</button>
+                            <button class="chip" onclick="sendSuggestion('Giải thích nhanh về Facebook Ads là gì?')">📢 Facebook Ads là gì?</button>
+                            <button class="chip" onclick="sendSuggestion('Hãy giới thiệu bản thân bạn là ai.')">🤖 Giới thiệu về bạn</button>
+                        </div>
+                    </div>
+                    <!-- Messages will be injected here -->
+                </div>
+
+                <!-- Input Area -->
+                <div class="chat-input-area">
+                    <div class="input-wrapper">
+                        <textarea
+                            id="chat-input"
+                            placeholder="Nhập tin nhắn... (Enter để gửi, Shift+Enter xuống dòng)"
+                            rows="1"
+                        ></textarea>
+                        <button class="send-btn" id="send-btn">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </div>
+                    <p class="input-hint">Được hỗ trợ bởi OpenAI GPT · <a href="#" id="config-link">Cài đặt API key</a></p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="modal" id="settings-modal">
+        <div class="modal-content">
+            <span class="close-btn" id="close-settings">&times;</span>
+            <h2><i class="fa-solid fa-gear"></i> Cài đặt AI</h2>
+
+            <div class="form-group">
+                <label>Nhà cung cấp AI (Provider)</label>
+                <div class="provider-tabs" id="provider-tabs">
+                    <button class="provider-tab active" data-provider="gemini">
+                        <i class="fa-brands fa-google"></i> Google Gemini
+                    </button>
+                    <button class="provider-tab" data-provider="openai">
+                        <i class="fa-solid fa-brain"></i> OpenAI GPT
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label id="api-key-label">Google Gemini API Key</label>
+                <input type="password" id="api-key-input" placeholder="AIzaSy...">
+                <small id="api-key-hint">
+                    Lấy API key miễn phí tại 
+                    <a href="https://aistudio.google.com/app/apikey" target="_blank" id="api-key-link">Google AI Studio</a>
+                </small>
+            </div>
+
+            <div class="form-group">
+                <label>Model</label>
+                <select id="model-select">
+                    <!-- Gemini models (default) -->
+                    <optgroup label="🔵 Google Gemini" id="gemini-models">
+                        <option value="gemini-2.0-flash">Gemini 2.0 Flash ⚡ (Nhanh nhất)</option>
+                        <option value="gemini-2.0-flash-lite">Gemini 2.0 Flash Lite 🧊 (Hạn mức cao)</option>
+                        <option value="gemini-2.5-pro-exp-03-25">Gemini 2.5 Pro 🔥 (Mạnh nhất)</option>
+                        <option value="gemini-2.0-flash-thinking-exp">Gemini 2.0 Thinking 🧠 (Suy luận)</option>
+                    </optgroup>
+                    <!-- OpenAI models (hidden by default) -->
+                    <optgroup label="🟢 OpenAI GPT" id="openai-models" style="display:none">
+                        <option value="gpt-4o">GPT-4o (Mạnh nhất)</option>
+                        <option value="gpt-4o-mini">GPT-4o Mini (Nhanh, tiết kiệm)</option>
+                        <option value="gpt-3.5-turbo">GPT-3.5 Turbo (Cũ hơn)</option>
+                    </optgroup>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>System Prompt (Tùy chỉnh vai trò AI)</label>
+                <textarea id="system-prompt-input" rows="3" placeholder="Ví dụ: Bạn là trợ lý tài chính thông minh..."></textarea>
+            </div>
+
+            <button class="btn-submit" id="save-settings-btn">
+                <i class="fa-solid fa-floppy-disk"></i> Lưu cài đặt
+            </button>
+        </div>
+    </div>
+
+    <script src="chat.js"></script>
+</body>
+</html>

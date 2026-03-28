@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SoraTools - Cá nhân</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="personal.css">
+</head>
+<body>
+<div class="app-layout">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header"><div class="logo"><i class="fa-solid fa-layer-group"></i><span>SoraTools</span></div></div>
+    <div class="nav-section">
+      <p class="nav-label">Bộ công cụ</p>
+      <nav class="nav-menu">
+        <a href="personal.html"      class="nav-item nav-item-personal active"><i class="fa-solid fa-user"></i><span>Cá nhân</span></a>
+        <a href="chat.html"          class="nav-item nav-item-ai"><i class="fa-solid fa-robot"></i><span>Chat với AI</span></a>
+        <a href="ads-report.html"    class="nav-item nav-item-ads"><i class="fa-solid fa-chart-column"></i><span>Báo cáo Ads</span></a>
+        <a href="research.html"      class="nav-item nav-item-research"><i class="fa-solid fa-magnifying-glass-chart"></i><span>Product Research</span></a>
+        <a href="post-designer.html" class="nav-item nav-item-designer"><i class="fa-solid fa-pen-ruler"></i><span>Post Designer</span></a>
+      </nav>
+    </div>
+    <div class="sidebar-footer">
+      <div class="theme-toggle" id="theme-toggle"><i class="fa-solid fa-moon"></i><span>Chế độ Tối</span></div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main-content">
+    <div class="workspace">
+
+      <!-- Header + Tabs -->
+      <div class="personal-header">
+        <div><h2><i class="fa-solid fa-user"></i> Cá nhân</h2><p id="p-date"></p></div>
+        <div class="personal-tabs">
+          <button class="ptab active" data-tab="chitieu"><i class="fa-solid fa-wallet"></i> Chi tiêu</button>
+          <button class="ptab" data-tab="todo"><i class="fa-solid fa-list-check"></i> To-Do</button>
+          <button class="ptab" data-tab="goals"><i class="fa-solid fa-bullseye"></i> Mục tiêu</button>
+        </div>
+      </div>
+
+      <!-- ===== TAB: CHI TIÊU ===== -->
+      <div class="ptab-panel active" id="tab-chitieu">
+        <!-- KPI Row -->
+        <div class="kpi-row">
+          <div class="kpi-card kpi-balance"><div class="kpi-label">Số dư tổng</div><div class="kpi-value" id="kpi-balance">0 ₫</div></div>
+          <div class="kpi-card kpi-income"><div class="kpi-icon"><i class="fa-solid fa-arrow-trend-up"></i></div><div><div class="kpi-label">Tổng thu</div><div class="kpi-value" id="kpi-income">0 ₫</div></div></div>
+          <div class="kpi-card kpi-expense"><div class="kpi-icon"><i class="fa-solid fa-arrow-trend-down"></i></div><div><div class="kpi-label">Tổng chi</div><div class="kpi-value" id="kpi-expense">0 ₫</div></div></div>
+          <div class="kpi-card kpi-savings"><div class="kpi-icon"><i class="fa-solid fa-piggy-bank"></i></div><div><div class="kpi-label">Tiết kiệm</div><div class="kpi-value" id="kpi-savings">0 ₫</div></div></div>
+        </div>
+
+        <div class="chitieu-grid">
+          <!-- Transactions -->
+          <div class="ct-card">
+            <div class="ct-card-header">
+              <h3><i class="fa-solid fa-receipt"></i> Giao dịch</h3>
+              <button class="btn-primary btn-sm" id="open-tx-btn"><i class="fa-solid fa-plus"></i> Thêm</button>
+            </div>
+            <div id="tx-list"><div class="empty-hint">Chưa có giao dịch nào.</div></div>
+          </div>
+
+          <!-- Hũ Tiền -->
+          <div class="ct-card">
+            <div class="ct-card-header">
+              <h3><i class="fa-solid fa-jar"></i> Quản lý Hũ tiền</h3>
+              <button class="btn-ghost-sm" id="distribute-btn"><i class="fa-solid fa-arrows-split-up-and-left"></i> Phân bổ thu nhập</button>
+            </div>
+            <div id="jars-list"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== TAB: TO-DO ===== -->
+      <div class="ptab-panel" id="tab-todo">
+        <div class="todo-topbar">
+          <div>
+            <h3 style="font-size:1.1rem;font-weight:800">To-Do List</h3>
+            <p id="todo-summary" style="color:var(--text-muted);font-size:.85rem"></p>
+          </div>
+          <div style="display:flex;gap:.5rem">
+            <button class="btn-ghost-sm" id="clear-done-btn"><i class="fa-solid fa-broom"></i> Dọn xong</button>
+            <button class="btn-primary" id="open-add-task-btn"><i class="fa-solid fa-plus"></i> Thêm Task</button>
+          </div>
+        </div>
+        <!-- Filter pills -->
+        <div class="todo-pills">
+          <div class="tpill active" data-filter="all"><span id="st-all">0</span> Tất cả</div>
+          <div class="tpill" data-filter="pending"><span id="st-pending">0</span> Đang làm</div>
+          <div class="tpill" data-filter="done"><span id="st-done">0</span> Xong</div>
+          <div class="tpill" data-filter="overdue"><span id="st-overdue">0</span> Quá hạn</div>
+        </div>
+        <!-- Toolbar -->
+        <div class="todo-toolbar2">
+          <div class="search-wrap2"><i class="fa-solid fa-magnifying-glass"></i><input type="text" id="search-task" placeholder="Tìm task..."></div>
+          <select id="filter-pri" class="tool-select2">
+            <option value="">Độ ưu tiên</option>
+            <option value="high">🔴 Cao</option><option value="medium">🟡 Trung bình</option><option value="low">🟢 Thấp</option>
+          </select>
+          <select id="sort-task" class="tool-select2">
+            <option value="created">Mới nhất</option><option value="due">Đến hạn</option><option value="priority">Ưu tiên</option>
+          </select>
+        </div>
+        <div id="todo-list"></div>
+      </div>
+
+      <!-- ===== TAB: MỤC TIÊU ===== -->
+      <div class="ptab-panel" id="tab-goals">
+        <div class="goals-overview">
+          <div class="progress-card card">
+            <div class="progress-ring-wrapper">
+              <svg class="progress-ring" viewBox="0 0 120 120">
+                <circle class="ring-bg" cx="60" cy="60" r="48"/>
+                <circle class="ring-fill" id="ring-fill" cx="60" cy="60" r="48"/>
+              </svg>
+              <div class="progress-center"><span id="ring-pct">0%</span></div>
+            </div>
+            <div class="progress-info">
+              <h3>Tiến độ hôm nay</h3>
+              <p id="ring-summary">0 / 0 mục tiêu</p>
+              <div class="motivation-badge" id="motivation-badge">Hãy bắt đầu nào! 💪</div>
+            </div>
+          </div>
+          <div class="stats-grid">
+            <div class="card stat-card"><i class="fa-solid fa-fire"></i><div><h4 id="streak-val">0</h4><p>Ngày liên tiếp</p></div></div>
+            <div class="card stat-card"><i class="fa-solid fa-trophy"></i><div><h4 id="completed-val">0</h4><p>Tổng hoàn thành</p></div></div>
+          </div>
+        </div>
+        <div class="goals-main">
+          <div class="card goal-main-card">
+            <div class="goal-card-header">
+              <h3><i class="fa-solid fa-star"></i> Mục tiêu chính hôm nay</h3>
+              <button class="btn-icon" id="edit-main-goal-btn"><i class="fa-solid fa-pen-to-square"></i></button>
+            </div>
+            <div id="main-goal-display"><span class="placeholder-text">Chưa đặt mục tiêu. Nhấn ✏️ để thiết lập.</span></div>
+            <div id="main-goal-input" style="display:none;gap:.5rem;margin-top:.5rem">
+              <input type="text" id="main-goal-text" placeholder="Mục tiêu hôm nay...">
+              <button class="btn-primary" id="save-main-goal-btn">Lưu</button>
+            </div>
+          </div>
+          <div class="card tasks-card">
+            <div class="goal-card-header">
+              <h3><i class="fa-solid fa-list-ul"></i> Nhiệm vụ hôm nay</h3>
+              <button class="btn-primary" id="add-goal-task-btn"><i class="fa-solid fa-plus"></i> Thêm</button>
+            </div>
+            <div id="goal-task-list"></div>
+            <div id="goal-add-form" style="display:none;margin-top:.75rem">
+              <div style="display:flex;gap:.5rem">
+                <input type="text" id="goal-task-input" placeholder="Tên nhiệm vụ..." style="flex:1;padding:.55rem .8rem;border:1px solid var(--border-color);border-radius:8px;background:var(--bg-color);color:var(--text-main);font-family:inherit">
+                <select id="goal-task-pri" style="padding:.55rem .6rem;border:1px solid var(--border-color);border-radius:8px;background:var(--bg-color);color:var(--text-main)">
+                  <option value="high">🔴 Cao</option><option value="medium" selected>🟡 TB</option><option value="low">🟢 Thấp</option>
+                </select>
+                <button class="btn-primary btn-sm" id="confirm-goal-task">Thêm</button>
+                <button class="btn-ghost-sm" id="cancel-goal-task">Hủy</button>
+              </div>
+            </div>
+          </div>
+          <div class="reset-area">
+            <button class="btn-danger-outline" id="reset-day-btn"><i class="fa-solid fa-rotate-right"></i> Đặt lại ngày mới</button>
+            <p>Bỏ tick tất cả nhiệm vụ để bắt đầu ngày mới.</p>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- workspace -->
+  </main>
+</div>
+
+<!-- Modal: Giao dịch -->
+<div class="modal" id="tx-modal">
+  <div class="modal-content">
+    <span class="close-btn" id="close-tx-modal">&times;</span>
+    <h2>Thêm Giao Dịch</h2>
+    <div class="form-group"><label>Loại</label>
+      <div class="type-toggle">
+        <input type="radio" id="t-expense" name="txtype" value="expense" checked><label for="t-expense">Chi tiêu</label>
+        <input type="radio" id="t-income" name="txtype" value="income"><label for="t-income">Thu nhập</label>
+      </div>
+    </div>
+    <div class="form-group"><label>Số tiền (₫)</label><input type="number" id="tx-amount" placeholder="50000"></div>
+    <div class="form-group"><label>Danh mục</label>
+      <select id="tx-cat">
+        <option value="Ăn uống">Ăn uống</option><option value="Di chuyển">Di chuyển</option>
+        <option value="Mua sắm">Mua sắm</option><option value="Hóa đơn">Hóa đơn</option>
+        <option value="Giải trí">Giải trí</option><option value="Sức khỏe">Sức khỏe</option>
+        <option value="Tiền lương">Tiền lương</option><option value="Đầu tư">Đầu tư</option>
+        <option value="Khác">Khác</option>
+      </select>
+    </div>
+    <div class="form-group"><label>Ngày</label><input type="date" id="tx-date"></div>
+    <div class="form-group"><label>Ghi chú</label><input type="text" id="tx-note" placeholder="Ghi chú..."></div>
+    <button class="btn-submit" id="save-tx-btn">Lưu Giao Dịch</button>
+  </div>
+</div>
+
+<!-- Modal: Phân bổ hũ -->
+<div class="modal" id="dist-modal">
+  <div class="modal-content">
+    <span class="close-btn" id="close-dist-modal">&times;</span>
+    <h2><i class="fa-solid fa-arrows-split-up-and-left"></i> Phân bổ Thu nhập</h2>
+    <p style="color:var(--text-muted);font-size:.85rem;margin-bottom:1rem">Nhập số tiền thu nhập, hệ thống tự phân bổ vào các hũ theo % đã cài.</p>
+    <div class="form-group"><label>Số tiền thu nhập (₫)</label><input type="number" id="dist-amount" placeholder="10000000"></div>
+    <div id="dist-preview" style="margin:.75rem 0"></div>
+    <button class="btn-submit" id="confirm-dist-btn">Xác nhận phân bổ</button>
+  </div>
+</div>
+
+<!-- Modal: Add Task -->
+<div class="modal" id="add-task-modal">
+  <div class="modal-content">
+    <span class="close-btn" id="close-task-modal">&times;</span>
+    <h2 id="task-modal-title"><i class="fa-solid fa-plus"></i> Thêm nhiệm vụ</h2>
+    <div class="form-group"><label>Tiêu đề *</label><input type="text" id="task-title-input" placeholder="Tên nhiệm vụ..." maxlength="120"></div>
+    <div class="form-group"><label>Ghi chú</label><textarea id="task-note-input" rows="2" placeholder="Chi tiết..."></textarea></div>
+    <div class="form-row">
+      <div class="form-group"><label>Độ ưu tiên</label>
+        <div class="priority-pick" id="priority-pick">
+          <button class="prio-btn" data-p="high">🔴 Cao</button>
+          <button class="prio-btn active" data-p="medium">🟡 TB</button>
+          <button class="prio-btn" data-p="low">🟢 Thấp</button>
+        </div>
+      </div>
+      <div class="form-group"><label>Danh mục</label>
+        <select id="task-cat-input" class="tool-select">
+          <option value="work">💼 Công việc</option><option value="personal">🏠 Cá nhân</option>
+          <option value="health">💪 Sức khỏe</option><option value="finance">💰 Tài chính</option><option value="other">📌 Khác</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Ngày hết hạn</label><input type="date" id="task-due-input"></div>
+      <div class="form-group"><label>Giờ</label><input type="time" id="task-time-input"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-ghost" id="cancel-task-btn">Hủy</button>
+      <button class="btn-primary" id="save-task-btn"><i class="fa-solid fa-floppy-disk"></i> Lưu</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="personal-app.js"></script>
+</body>
+</html>

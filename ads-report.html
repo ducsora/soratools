@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SoraTools - Báo cáo Quảng cáo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="ads-report.css">
+</head>
+<body>
+    <div class="app-layout">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fa-solid fa-layer-group"></i>
+                    <span>SoraTools</span>
+                </div>
+            </div>
+            <div class="nav-section">
+                <p class="nav-label">Bộ công cụ</p>
+                <nav class="nav-menu">
+                    <a href="personal.html"      class="nav-item nav-item-personal"><i class="fa-solid fa-user"></i><span>Cá nhân</span></a>
+                    <a href="chat.html"          class="nav-item nav-item-ai"><i class="fa-solid fa-robot"></i><span>Chat với AI</span></a>
+                    <a href="ads-report.html"    class="nav-item nav-item-ads active"><i class="fa-solid fa-chart-column"></i><span>Báo cáo Ads</span></a>
+                    <a href="research.html"      class="nav-item nav-item-research"><i class="fa-solid fa-magnifying-glass-chart"></i><span>Product Research</span></a>
+                    <a href="post-designer.html" class="nav-item nav-item-designer"><i class="fa-solid fa-pen-ruler"></i><span>Post Designer</span></a>
+                </nav>
+            </div>
+            <div class="sidebar-footer">
+                <div class="theme-toggle" id="theme-toggle">
+                    <i class="fa-solid fa-moon"></i>
+                    <span>Chế độ Tối</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="workspace">
+
+                <!-- Page Header -->
+                <div class="workspace-header">
+                    <div>
+                        <h2>Báo cáo Chi phí Quảng cáo</h2>
+                        <p id="report-date-label">Kết nối Google Sheet để xem báo cáo</p>
+                    </div>
+                    <div class="header-actions">
+                        <button class="btn-ghost-sm" id="settings-btn"><i class="fa-solid fa-gear"></i> Cấu hình</button>
+                        <button class="btn-primary" id="refresh-btn" disabled>
+                            <i class="fa-solid fa-rotate-right"></i> Tải lại
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Connect Banner (shows when not configured) -->
+                <div class="connect-banner" id="connect-banner">
+                    <div class="connect-inner">
+                        <div class="connect-icon"><i class="fa-brands fa-google-drive"></i></div>
+                        <h3>Kết nối với Google Sheets</h3>
+                        <p>Nhập Sheet ID và Google API Key để bắt đầu đọc dữ liệu quảng cáo.</p>
+                        <button class="btn-primary" id="open-config-banner"><i class="fa-solid fa-plug"></i> Thiết lập kết nối</button>
+                    </div>
+                </div>
+
+                <!-- Dashboard (hidden until data loaded) -->
+                <div id="dashboard" style="display:none;">
+
+                    <!-- KPI Cards -->
+                    <section class="kpi-grid">
+                        <div class="kpi-card">
+                            <div class="kpi-icon revenue"><i class="fa-solid fa-money-bill-wave"></i></div>
+                            <div class="kpi-info">
+                                <p>Tổng Doanh số</p>
+                                <h3 id="kpi-revenue">—</h3>
+                            </div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-icon ads-cost"><i class="fa-brands fa-facebook"></i></div>
+                            <div class="kpi-info">
+                                <p>Chi phí Ads (Dataslayer)</p>
+                                <h3 id="kpi-ads-cost">—</h3>
+                            </div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-icon orders"><i class="fa-solid fa-box"></i></div>
+                            <div class="kpi-info">
+                                <p>Tổng Số đơn</p>
+                                <h3 id="kpi-orders">—</h3>
+                            </div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-icon ratio" id="kpi-ratio-card">
+                                <i class="fa-solid fa-percent"></i>
+                            </div>
+                            <div class="kpi-info">
+                                <p>Tỷ lệ chi phí / Doanh số</p>
+                                <h3 id="kpi-ratio">—</h3>
+                            </div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-icon cpc"><i class="fa-solid fa-comment-dollar"></i></div>
+                            <div class="kpi-info">
+                                <p>Chi phí / Contact</p>
+                                <h3 id="kpi-cpc">—</h3>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Charts Row -->
+                    <div class="charts-row">
+                        <div class="chart-card">
+                            <h3><i class="fa-solid fa-chart-bar"></i> Doanh số vs Chi phí Ads theo sản phẩm</h3>
+                            <div class="chart-wrapper">
+                                <canvas id="barChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="chart-card chart-card-sm">
+                            <h3><i class="fa-solid fa-chart-pie"></i> Phân bổ Doanh số</h3>
+                            <div class="chart-wrapper">
+                                <canvas id="pieChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Data Table -->
+                    <div class="table-card">
+                        <div class="table-header">
+                            <div class="table-header-top">
+                                <h3><i class="fa-solid fa-table"></i> Chi tiết theo Mã Hàng</h3>
+                                <div class="date-range-bar">
+                                    <i class="fa-regular fa-calendar"></i>
+                                    <span>Từ ngày</span>
+                                    <input type="date" id="filter-date-from" class="date-input">
+                                    <span>→ Đến ngày</span>
+                                    <input type="date" id="filter-date-to" class="date-input">
+                                    <button class="btn-ghost-sm" id="reset-date-btn" title="Xóa lọc ngày">
+                                        <i class="fa-solid fa-xmark"></i>
+                                    </button>
+                                    <div class="quick-dates">
+                                        <button class="quick-btn" data-range="today">Hôm nay</button>
+                                        <button class="quick-btn" data-range="this-month">T1 này</button>
+                                        <button class="quick-btn" data-range="last-7">7 ngày</button>
+                                        <button class="quick-btn" data-range="last-30">30 ngày</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="table-controls">
+                                <input type="text" id="search-table" placeholder="🔍 Tìm mã hàng..." class="table-search">
+                                <select id="filter-loai" class="table-filter">
+                                    <option value="">Tất cả loại</option>
+                                    <option value="Hàng air">Hàng air</option>
+                                    <option value="Hàng sup">Hàng sup</option>
+                                </select>
+                                <select id="filter-hieu-qua" class="table-filter">
+                                    <option value="">Tất cả hiệu quả</option>
+                                    <option value="good">✅ Tốt (≤20%)</option>
+                                    <option value="warn">⚠️ Trung bình (21-35%)</option>
+                                    <option value="bad">🔴 Cao (>35%)</option>
+                                    <option value="na">— Chưa có ads</option>
+                                </select>
+                                <select id="filter-doanh-so" class="table-filter">
+                                    <option value="">Tất cả</option>
+                                    <option value="has">✅ Có doanh số</option>
+                                    <option value="none">❌ Không có DS</option>
+                                    <option value="has-ads">📸 Có Ads</option>
+                                </select>
+                                <select id="sort-by" class="table-filter">
+                                    <option value="">Sắp xếp theo...</option>
+                                    <option value="revenue-desc">Doanh số ↓ (cao → thấp)</option>
+                                    <option value="revenue-asc">Doanh số ↑ (thấp → cao)</option>
+                                    <option value="orders-desc">Số đơn ↓</option>
+                                    <option value="ads-desc">Ads Dataslayer ↓</option>
+                                    <option value="pct-desc">% Chi phí ↓ (cao nhất)</option>
+                                    <option value="pct-asc">% Chi phí ↑ (thấp nhất)</option>
+                                    <option value="name-asc">Tên A → Z</option>
+                                </select>
+                                <button class="btn-ghost-sm" id="reset-filters-btn" title="Xóa bộ lọc">
+                                    <i class="fa-solid fa-filter-circle-xmark"></i>
+                                </button>
+                                <button class="btn-ghost-sm" id="export-csv-btn"><i class="fa-solid fa-file-csv"></i> Xuất CSV</button>
+                            </div>
+                        </div>
+                        <div class="table-scroll">
+                            <table id="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Mã Hàng</th>
+                                        <th>Ngày BĐ</th>
+                                        <th>Ngày KT</th>
+                                        <th>Doanh số (VND)</th>
+                                        <th>% Chi phí</th>
+                                        <th>Số Đơn</th>
+                                        <th>Chi phí/Contact</th>
+                                        <th>Ads Dataslayer</th>
+                                        <th>% Chi phí (Ads)</th>
+                                        <th>Loại hàng</th>
+                                        <th>Hiệu quả</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table-body"></tbody>
+                            </table>
+                        </div>
+                        <div class="table-footer" id="table-footer"></div>
+                    </div>
+                </div>
+
+                <!-- Loading state -->
+                <div class="loading-state" id="loading-state" style="display:none;">
+                    <div class="spinner"></div>
+                    <p>Đang tải dữ liệu từ Google Sheets...</p>
+                </div>
+
+                <!-- Error state -->
+                <div class="error-state" id="error-state" style="display:none;">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <p id="error-msg">Không thể tải dữ liệu.</p>
+                    <button class="btn-primary" onclick="loadData()">Thử lại</button>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Config Modal -->
+    <div class="modal" id="config-modal">
+        <div class="modal-content modal-wide">
+            <span class="close-btn" id="close-config">&times;</span>
+            <h2><i class="fa-brands fa-google-drive"></i> Kết nối Google Sheets</h2>
+
+            <div class="config-steps">
+                <div class="step-badge">Bước 1</div>
+                <div class="form-group">
+                    <label>Google Sheet URL hoặc Sheet ID</label>
+                    <input type="text" id="cfg-sheet-id" placeholder="https://docs.google.com/spreadsheets/d/xxxx... hoặc chỉ ID">
+                    <small>Chia sẻ sheet ở chế độ "Anyone with the link can view"</small>
+                </div>
+            </div>
+
+            <div class="config-steps">
+                <div class="step-badge">Bước 2</div>
+                <div class="form-group">
+                    <label>Google Sheets API Key</label>
+                    <input type="password" id="cfg-api-key" placeholder="AIzaSy...">
+                    <small>Tạo API key tại <a href="https://console.cloud.google.com/" target="_blank">Google Cloud Console</a> → Bật Google Sheets API</small>
+                </div>
+            </div>
+
+            <div class="config-steps">
+                <div class="step-badge">Bước 3</div>
+                <div class="form-group-row">
+                    <div class="form-group">
+                        <label>Tên Sheet (Tab)</label>
+                        <input type="text" id="cfg-sheet-name" placeholder="Sheet1" value="Sheet1">
+                    </div>
+                    <div class="form-group">
+                        <label>Hàng bắt đầu dữ liệu</label>
+                        <input type="number" id="cfg-data-row" value="3" min="1">
+                        <small>Hàng đầu tiên có dữ liệu sản phẩm (không tính header)</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="config-steps">
+                <div class="step-badge step-optional">Tùy chọn</div>
+                <div class="form-group">
+                    <label>Mapping cột (để trống = dùng mặc định)</label>
+                    <div class="col-mapping">
+                        <div class="col-map-item"><span>Mã Hàng</span><input type="text" id="col-ma-hang" placeholder="A" value="A"></div>
+                        <div class="col-map-item"><span>Ngày BĐ</span><input type="text" id="col-start" placeholder="B" value="B"></div>
+                        <div class="col-map-item"><span>Ngày KT</span><input type="text" id="col-end" placeholder="C" value="C"></div>
+                        <div class="col-map-item"><span>Doanh số</span><input type="text" id="col-revenue" placeholder="D" value="D"></div>
+                        <div class="col-map-item"><span>% Chi phí</span><input type="text" id="col-cost-pct" placeholder="F" value="F"></div>
+                        <div class="col-map-item"><span>Số Đơn</span><input type="text" id="col-orders" placeholder="G" value="G"></div>
+                        <div class="col-map-item"><span>Chi phí/Contact</span><input type="text" id="col-cpc" placeholder="H" value="H"></div>
+                        <div class="col-map-item"><span>Ads Dataslayer</span><input type="text" id="col-ads" placeholder="I" value="I"></div>
+                        <div class="col-map-item"><span>% Ads</span><input type="text" id="col-ads-pct" placeholder="J" value="J"></div>
+                        <div class="col-map-item"><span>Loại Hàng</span><input type="text" id="col-loai" placeholder="K" value="K"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Preview panel -->
+            <div id="preview-panel" style="display:none;">
+                <div class="preview-header">
+                    <i class="fa-solid fa-table"></i> Xem trước dữ liệu thô (5 hàng đầu)
+                    <small>Dựa vào bảng này để điền đúng cột ở trên</small>
+                </div>
+                <div class="preview-scroll" id="preview-table-wrap"></div>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn-ghost" id="close-config-btn">Hủy</button>
+                <button class="btn-ghost-sm" id="preview-btn"><i class="fa-solid fa-eye"></i> Xem dữ liệu thô</button>
+                <button class="btn-primary" id="save-config-btn"><i class="fa-solid fa-plug"></i> Lưu &amp; Tải dữ liệu</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="ads-report.js"></script>
+</body>
+</html>

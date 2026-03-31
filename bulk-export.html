@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SoraTools – Bulk Ad Builder</title>
+  <meta name="description" content="Tạo hàng loạt Ad Set và Ad, xuất ra file Excel chuẩn Facebook để import vào Ads Manager.">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="bulk-export.css">
+  <script>(function(){var t=localStorage.getItem('theme');if(t==='dark'||!t){document.documentElement.setAttribute('data-theme','dark');}})();</script>
+</head>
+<body>
+<div class="app-layout">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo"><i class="fa-solid fa-layer-group"></i><span>SoraTools</span></div>
+    </div>
+    <div class="nav-section">
+      <p class="nav-label">Bộ công cụ</p>
+      <nav class="nav-menu">
+        <a href="personal.html"      class="nav-item nav-item-personal"><i class="fa-solid fa-user"></i><span>Cá nhân</span></a>
+        <a href="chat.html"          class="nav-item nav-item-ai"><i class="fa-solid fa-robot"></i><span>Chat với AI</span></a>
+        <a href="ads-report.html"    class="nav-item nav-item-ads"><i class="fa-solid fa-chart-column"></i><span>Báo cáo Ads</span></a>
+        <a href="meta-budget.html"   class="nav-item nav-item-meta"><i class="fa-brands fa-meta"></i><span>Meta Budget</span></a>
+        <a href="meta-campaign.html" class="nav-item nav-item-campaign"><i class="fa-solid fa-rocket"></i><span>Campaign Creator</span></a>
+        <a href="bulk-export.html"   class="nav-item nav-item-bulk active"><i class="fa-solid fa-file-excel"></i><span>Bulk Ad Builder</span></a>
+        <a href="research.html"      class="nav-item nav-item-research"><i class="fa-solid fa-magnifying-glass-chart"></i><span>Product Research</span></a>
+        <a href="post-designer.html" class="nav-item nav-item-designer"><i class="fa-solid fa-pen-ruler"></i><span>Post Designer</span></a>
+      </nav>
+      <p class="nav-label" style="margin-top:1.5rem">Quản trị</p>
+      <nav class="nav-menu">
+        <a href="admin.html" class="nav-item nav-item-admin"><i class="fa-solid fa-shield-halved"></i><span>Quản lý tài khoản</span></a>
+      </nav>
+    </div>
+    <div class="sidebar-footer">
+      <div class="theme-toggle" id="theme-toggle"><i class="fa-solid fa-moon"></i><span>Chế độ Tối</span></div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main-content">
+    <div class="workspace">
+
+      <!-- Header -->
+      <div class="be-header">
+        <div>
+          <h1><i class="fa-solid fa-file-excel"></i> Bulk Ad Builder</h1>
+          <p>Tạo hàng loạt Ad Set & Ad → Xuất file Excel chuẩn Facebook để import vào Ads Manager</p>
+        </div>
+        <div class="header-actions">
+          <button class="btn-ghost-sm" id="btn-load-template"><i class="fa-solid fa-folder-open"></i> Load Template</button>
+          <button class="btn-ghost-sm" id="btn-howto"><i class="fa-solid fa-circle-question"></i> Hướng dẫn</button>
+          <button class="btn-primary" id="btn-export-xlsx"><i class="fa-solid fa-file-excel"></i> Xuất Excel</button>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="be-tabs">
+        <button class="be-tab active" data-tab="config" id="tab-config"><i class="fa-solid fa-gear"></i> Cấu hình chung</button>
+        <button class="be-tab" data-tab="table" id="tab-table"><i class="fa-solid fa-table"></i> Bảng Ad Sets / Ads <span class="row-badge" id="row-count-badge">0 hàng</span></button>
+        <button class="be-tab" data-tab="preview" id="tab-preview"><i class="fa-solid fa-eye"></i> Preview & Export</button>
+      </div>
+
+      <!-- ═══════ TAB 1: CONFIG ═══════ -->
+      <div class="be-panel active" id="panel-config">
+        <div class="config-grid">
+
+          <!-- Campaign Info -->
+          <div class="config-card">
+            <div class="config-card-header"><i class="fa-solid fa-flag" style="color:#f97316"></i> Thông tin Campaign</div>
+            <div class="form-group">
+              <label>Tên Campaign <span class="req">*</span></label>
+              <input type="text" id="cfg-campaign-name" placeholder="VD: [T4/2025] Máy rửa mặt – Philippines – Video UGC">
+            </div>
+            <div class="form-row-2">
+              <div class="form-group">
+                <label>Mục tiêu <span class="req">*</span></label>
+                <select id="cfg-objective">
+                  <option value="OUTCOME_SALES" selected>🛒 Sales (Mua hàng)</option>
+                  <option value="OUTCOME_LEADS">📋 Lead Generation</option>
+                  <option value="OUTCOME_TRAFFIC">🌐 Traffic</option>
+                  <option value="OUTCOME_AWARENESS">📣 Awareness</option>
+                  <option value="OUTCOME_ENGAGEMENT">💬 Engagement</option>
+                  <option value="OUTCOME_VIDEO_VIEWS">▶ Video Views</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Trạng thái Campaign</label>
+                <select id="cfg-campaign-status">
+                  <option value="PAUSED" selected>⏸ Paused (khuyến nghị)</option>
+                  <option value="ACTIVE">▶ Active</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row-2">
+              <div class="form-group">
+                <label>Campaign ID <small style="font-size:.72rem;color:var(--text-muted)">(nếu muốn dùng campaign cũ)</small></label>
+                <input type="text" id="cfg-campaign-id" placeholder="Để trống = tạo campaign mới">
+              </div>
+              <div class="form-group">
+                <label>Ad Account ID <span class="req">*</span></label>
+                <div class="input-prefix-row"><span class="input-pfx">act_</span><input type="text" id="cfg-account-id" placeholder="123456789012345"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Ad Set Defaults -->
+          <div class="config-card">
+            <div class="config-card-header"><i class="fa-solid fa-layer-group" style="color:#60a5fa"></i> Mặc định Ad Set</div>
+            <div class="form-row-2">
+              <div class="form-group">
+                <label>Pixel ID <span class="req">*</span></label>
+                <input type="text" id="cfg-pixel-id" placeholder="1234567890123456">
+              </div>
+              <div class="form-group">
+                <label>Page ID <span class="req">*</span></label>
+                <input type="text" id="cfg-page-id" placeholder="1234567890123456">
+              </div>
+            </div>
+            <div class="form-row-2">
+              <div class="form-group">
+                <label>Ngân sách / ngày (USD)</label>
+                <div class="input-prefix-row"><span class="input-pfx">$</span><input type="number" id="cfg-budget" placeholder="10" value="10" min="1" step="0.5"></div>
+              </div>
+              <div class="form-group">
+                <label>Sự kiện tối ưu</label>
+                <select id="cfg-opt-event">
+                  <option value="PURCHASE" selected>Purchase</option>
+                  <option value="INITIATE_CHECKOUT">Initiate Checkout</option>
+                  <option value="ADD_TO_CART">Add to Cart</option>
+                  <option value="LEAD">Lead</option>
+                  <option value="VIEW_CONTENT">View Content</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row-2">
+              <div class="form-group">
+                <label>Chiến lược giá thầu</label>
+                <select id="cfg-bid-strategy">
+                  <option value="LOWEST_COST_WITHOUT_CAP">Lowest Cost (Auto)</option>
+                  <option value="COST_CAP">Cost Cap</option>
+                  <option value="BID_CAP">Bid Cap</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Ngày bắt đầu</label>
+                <input type="datetime-local" id="cfg-start-date">
+              </div>
+            </div>
+          </div>
+
+          <!-- Creative Defaults -->
+          <div class="config-card">
+            <div class="config-card-header"><i class="fa-solid fa-photo-film" style="color:#a855f7"></i> Mặc định Creative</div>
+            <div class="form-group">
+              <label>Landing Page URL <span class="req">*</span></label>
+              <input type="url" id="cfg-landing-url" placeholder="https://yoursite.com/product">
+            </div>
+            <div class="form-row-2">
+              <div class="form-group">
+                <label>CTA mặc định</label>
+                <select id="cfg-cta">
+                  <option value="SHOP_NOW">🛒 Shop Now</option>
+                  <option value="LEARN_MORE">🔗 Learn More</option>
+                  <option value="ORDER_NOW">📦 Order Now</option>
+                  <option value="GET_OFFER">🎁 Get Offer</option>
+                  <option value="BUY_NOW">💳 Buy Now</option>
+                  <option value="SIGN_UP">📝 Sign Up</option>
+                  <option value="CONTACT_US">💬 Contact Us</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Định dạng quảng cáo</label>
+                <select id="cfg-format">
+                  <option value="VIDEO">📹 Video</option>
+                  <option value="IMAGE">🖼 Hình ảnh</option>
+                  <option value="CAROUSEL">🎠 Carousel</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Primary Text mặc định</label>
+              <textarea id="cfg-primary-text" rows="2" placeholder="Nội dung quảng cáo mặc định (có thể tùy chỉnh từng hàng)"></textarea>
+            </div>
+          </div>
+
+          <!-- Naming Convention -->
+          <div class="config-card">
+            <div class="config-card-header"><i class="fa-solid fa-tag" style="color:#22c55e"></i> Quy tắc đặt tên</div>
+            <div class="form-group">
+              <label>Template tên Ad Set</label>
+              <input type="text" id="cfg-adset-name-tpl" value="[{month}] {campaign} – {country} – {target} – {index}" placeholder="Template đặt tên">
+              <small>Biến: {month} {campaign} {country} {target} {index} {date}</small>
+            </div>
+            <div class="form-group">
+              <label>Template tên Ad</label>
+              <input type="text" id="cfg-ad-name-tpl" value="Ad_{index}_{creative}" placeholder="Template đặt tên Ad">
+              <small>Biến: {index} {creative} {adset} {date}</small>
+            </div>
+            <div class="info-notice">
+              <i class="fa-solid fa-lightbulb"></i>
+              <span>Tên sẽ được tự động điền dựa trên template. Bạn vẫn có thể chỉnh sửa tay từng ô trong bảng.</span>
+            </div>
+            <div style="margin-top:1rem;text-align:right">
+              <button class="btn-primary" id="btn-go-to-table" style="gap:.5rem">
+                <i class="fa-solid fa-arrow-right"></i> Tiếp theo: Bảng Ad Sets
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ═══════ TAB 2: TABLE ═══════ -->
+      <div class="be-panel" id="panel-table">
+        <div class="table-toolbar">
+          <div class="table-toolbar-left">
+            <button class="btn-primary" id="btn-add-row"><i class="fa-solid fa-plus"></i> Thêm hàng</button>
+            <button class="btn-ghost-sm" id="btn-clone-row"><i class="fa-solid fa-copy"></i> Nhân bản</button>
+            <button class="btn-ghost-sm" id="btn-delete-selected"><i class="fa-solid fa-trash"></i> Xóa đã chọn</button>
+            <button class="btn-ghost-sm" id="btn-clear-all"><i class="fa-solid fa-broom"></i> Xóa tất cả</button>
+          </div>
+          <div class="table-toolbar-right">
+            <button class="btn-ghost-sm" id="btn-import-csv"><i class="fa-solid fa-file-csv"></i> Import CSV</button>
+            <input type="file" id="csv-file-input" accept=".csv" style="display:none">
+            <span class="row-info" id="table-row-info">0 hàng</span>
+          </div>
+        </div>
+
+        <!-- Scrollable table wrapper -->
+        <div class="table-wrapper">
+          <table class="bulk-table" id="bulk-table">
+            <thead>
+              <tr>
+                <th class="col-check"><input type="checkbox" id="select-all-rows"></th>
+                <th class="col-num">#</th>
+                <th class="col-adset-name">Tên Ad Set</th>
+                <th class="col-country">Quốc gia</th>
+                <th class="col-age">Tuổi</th>
+                <th class="col-gender">Giới tính</th>
+                <th class="col-interest">Sở thích / Interest</th>
+                <th class="col-placement">Placement</th>
+                <th class="col-budget">Budget/ngày ($)</th>
+                <th class="col-ad-name">Tên Ad</th>
+                <th class="col-creative">Creative ID / Hash</th>
+                <th class="col-headline">Headline</th>
+                <th class="col-text">Primary Text</th>
+                <th class="col-cta">CTA</th>
+                <th class="col-url">Landing URL</th>
+                <th class="col-status">Status</th>
+                <th class="col-action">Thao tác</th>
+              </tr>
+            </thead>
+            <tbody id="bulk-tbody">
+              <!-- Rows injected by JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="table-empty" id="table-empty">
+          <i class="fa-solid fa-table" style="font-size:2.5rem;color:var(--text-muted);margin-bottom:1rem"></i>
+          <p>Chưa có hàng nào. Nhấn <strong>+ Thêm hàng</strong> hoặc <strong>Import CSV</strong> để bắt đầu.</p>
+        </div>
+
+        <div class="table-footer-nav">
+          <button class="btn-ghost" id="btn-back-to-config"><i class="fa-solid fa-arrow-left"></i> Quay lại cấu hình</button>
+          <button class="btn-primary" id="btn-go-to-preview"><i class="fa-solid fa-eye"></i> Xem trước & Export</button>
+        </div>
+      </div>
+
+      <!-- ═══════ TAB 3: PREVIEW & EXPORT ═══════ -->
+      <div class="be-panel" id="panel-preview">
+        <div class="preview-header">
+          <div class="preview-stats" id="preview-stats">
+            <div class="stat-chip"><i class="fa-solid fa-flag"></i> <span id="stat-campaigns">1 Campaign</span></div>
+            <div class="stat-chip"><i class="fa-solid fa-layer-group"></i> <span id="stat-adsets">0 Ad Sets</span></div>
+            <div class="stat-chip"><i class="fa-solid fa-rectangle-ad"></i> <span id="stat-ads">0 Ads</span></div>
+            <div class="stat-chip"><i class="fa-solid fa-dollar-sign"></i> <span id="stat-budget">$0/ngày</span></div>
+          </div>
+          <div style="display:flex;gap:.65rem;flex-wrap:wrap">
+            <button class="btn-ghost-sm" id="btn-copy-preview"><i class="fa-solid fa-copy"></i> Copy CSV</button>
+            <button class="btn-primary" id="btn-final-export"><i class="fa-solid fa-file-excel"></i> Xuất .xlsx ngay</button>
+          </div>
+        </div>
+
+        <!-- Summary cards -->
+        <div class="preview-summary" id="preview-summary">
+          <!-- Generated by JS -->
+        </div>
+
+        <!-- Preview table -->
+        <div class="preview-notice">
+          <i class="fa-solid fa-circle-info"></i>
+          <span>File Excel xuất ra đúng chuẩn cột Facebook Ads Manager. Sau khi tải về, vào <strong>Ads Manager → Nhập/Xuất → Import Ads (.xlsx)</strong> để tải lên.</span>
+        </div>
+
+        <div class="table-wrapper">
+          <table class="bulk-table preview-tbl" id="preview-table">
+            <thead>
+              <tr id="preview-thead-row">
+                <!-- Generated by JS -->
+              </tr>
+            </thead>
+            <tbody id="preview-tbody">
+              <!-- Generated by JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- How to import guide -->
+        <div class="import-guide">
+          <div class="guide-step"><div class="guide-num">1</div><div><strong>Tải file Excel về máy</strong><br><small>Nhấn nút "Xuất .xlsx ngay" ở trên</small></div></div>
+          <div class="guide-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+          <div class="guide-step"><div class="guide-num">2</div><div><strong>Vào Ads Manager</strong><br><small>Nhấp Nhập/Xuất → Import Ads</small></div></div>
+          <div class="guide-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+          <div class="guide-step"><div class="guide-num">3</div><div><strong>Chọn file .xlsx</strong><br><small>Hệ thống hiện draft màu xanh</small></div></div>
+          <div class="guide-arrow"><i class="fa-solid fa-chevron-right"></i></div>
+          <div class="guide-step"><div class="guide-num">4</div><div><strong>Review & Publish</strong><br><small>Kiểm tra & bấm đăng</small></div></div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- How-to Modal -->
+<div class="modal" id="howto-modal">
+  <div class="modal-content modal-wide">
+    <span class="close-btn" id="close-howto">&times;</span>
+    <h2><i class="fa-solid fa-circle-question" style="color:#60a5fa"></i> Hướng dẫn sử dụng</h2>
+    <div class="howto-steps">
+      <div class="howto-step">
+        <div class="howto-num">1</div>
+        <div><strong>Cấu hình chung</strong> – Điền Campaign ID (nếu dùng campaign cũ), Ad Account, Pixel, Page ID và các giá trị mặc định.</div>
+      </div>
+      <div class="howto-step">
+        <div class="howto-num">2</div>
+        <div><strong>Bảng Ad Sets/Ads</strong> – Mỗi hàng = 1 Ad Set + 1 Ad. Thêm hàng, nhân bản để tạo nhanh. Chỉnh sửa trực tiếp trên bảng.</div>
+      </div>
+      <div class="howto-step">
+        <div class="howto-num">3</div>
+        <div><strong>Xóa ID để tạo mới</strong> – Nếu muốn tạo Ad Set mới trong campaign cũ, để trống cột "Ad Set ID". Giữ Campaign ID nếu muốn gộp vào campaign cũ.</div>
+      </div>
+      <div class="howto-step">
+        <div class="howto-num">4</div>
+        <div><strong>Preview & Export</strong> – Xem trước bảng Excel, kiểm tra dữ liệu rồi nhấn "Xuất .xlsx". File xuất ra đúng chuẩn cột Facebook.</div>
+      </div>
+      <div class="howto-step">
+        <div class="howto-num">5</div>
+        <div><strong>Import vào Ads Manager</strong> – Vào Ads Manager → Nhập/Xuất → Import Ads (.xlsx). Hệ thống sẽ hiển thị các mục dưới dạng bản nháp để bạn review rồi đăng.</div>
+      </div>
+    </div>
+    <div class="modal-actions"><button class="btn-primary" id="close-howto-btn">Đã hiểu!</button></div>
+  </div>
+</div>
+
+<!-- Template Modal -->
+<div class="modal" id="template-modal">
+  <div class="modal-content modal-wide">
+    <span class="close-btn" id="close-template">&times;</span>
+    <h2><i class="fa-solid fa-folder-open" style="color:#f97316"></i> Chọn Template có sẵn</h2>
+    <div id="template-list-items"></div>
+    <div class="modal-actions">
+      <button class="btn-ghost" id="close-template-btn">Đóng</button>
+    </div>
+  </div>
+</div>
+
+<!-- SheetJS CDN -->
+<script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+<script src="bulk-export.js"></script>
+</body>
+</html>

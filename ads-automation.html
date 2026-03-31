@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SoraTools – Ads Automation</title>
+  <meta name="description" content="Upload video, cấu hình target, generate content AI và launch chiến dịch trực tiếp lên Facebook Ads Manager.">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="ads-automation.css">
+  <script>(function(){ const t=localStorage.getItem('theme'); if(t==='dark'||!t) document.documentElement.setAttribute('data-theme','dark'); })();</script>
+  <!-- Facebook JS SDK (loaded async, initialized by JS after App ID entered) -->
+  <div id="fb-root"></div>
+</head>
+<body>
+<div class="app-layout">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo"><i class="fa-solid fa-layer-group"></i><span>SoraTools</span></div>
+    </div>
+    <div class="nav-section">
+      <p class="nav-label">Bộ công cụ</p>
+      <nav class="nav-menu">
+        <a href="personal.html"       class="nav-item nav-item-personal"><i class="fa-solid fa-user"></i><span>Cá nhân</span></a>
+        <a href="chat.html"           class="nav-item nav-item-ai"><i class="fa-solid fa-robot"></i><span>Chat với AI</span></a>
+        <a href="ads-report.html"     class="nav-item nav-item-ads"><i class="fa-solid fa-chart-column"></i><span>Báo cáo Ads</span></a>
+        <a href="meta-budget.html"    class="nav-item nav-item-meta"><i class="fa-brands fa-meta"></i><span>Meta Budget</span></a>
+        <a href="meta-campaign.html"  class="nav-item nav-item-campaign"><i class="fa-solid fa-rocket"></i><span>Campaign Creator</span></a>
+        <a href="bulk-export.html"    class="nav-item nav-item-bulk"><i class="fa-solid fa-file-excel"></i><span>Bulk Ad Builder</span></a>
+        <a href="ads-automation.html" class="nav-item nav-item-automation active"><i class="fa-solid fa-bolt"></i><span>Ads Automation</span></a>
+        <a href="research.html"       class="nav-item nav-item-research"><i class="fa-solid fa-magnifying-glass-chart"></i><span>Product Research</span></a>
+        <a href="post-designer.html"  class="nav-item nav-item-designer"><i class="fa-solid fa-pen-ruler"></i><span>Post Designer</span></a>
+      </nav>
+      <p class="nav-label" style="margin-top:1.5rem">Quản trị</p>
+      <nav class="nav-menu">
+        <a href="admin.html" class="nav-item nav-item-admin"><i class="fa-solid fa-shield-halved"></i><span>Quản lý tài khoản</span></a>
+      </nav>
+    </div>
+    <div class="sidebar-footer">
+      <div class="theme-toggle" id="theme-toggle"><i class="fa-solid fa-moon"></i><span>Chế độ Tối</span></div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main-content">
+    <div class="workspace">
+
+      <!-- Top Bar -->
+      <div class="aa-topbar">
+        <div class="aa-title">
+          <i class="fa-solid fa-bolt"></i>
+          <span>Ads Automation</span>
+          <span class="aa-badge">BETA</span>
+        </div>
+        <div class="aa-topbar-right">
+          <!-- FB Connection Status -->
+          <div class="fb-status" id="fb-status-chip">
+            <div class="fb-dot" id="fb-dot"></div>
+            <span id="fb-status-text">Chưa kết nối</span>
+          </div>
+          <button class="btn-fb-connect" id="btn-fb-connect">
+            <i class="fa-brands fa-facebook"></i> Đăng nhập Facebook
+          </button>
+          <button class="btn-ghost-sm" id="btn-fb-logout" style="display:none">
+            <i class="fa-solid fa-right-from-bracket"></i> Đăng xuất
+          </button>
+          <button class="btn-ghost-sm" id="btn-api-settings">
+            <i class="fa-solid fa-gear"></i> App ID
+          </button>
+        </div>
+      </div>
+
+      <!-- Sub Nav Tabs -->
+      <div class="aa-subnav">
+        <button class="aa-subnav-btn active" data-tab="campaign"><i class="fa-solid fa-flag"></i> Tạo Campaign</button>
+        <button class="aa-subnav-btn" data-tab="history"><i class="fa-solid fa-clock-rotate-left"></i> Lịch sử</button>
+      </div>
+
+      <!-- Main content (campaign tab) -->
+      <div class="aa-tab-panel active" id="tab-campaign">
+
+        <!-- Step Progress -->
+        <div class="aa-steps">
+          <div class="aa-step active" data-step="1" id="step-indicator-1">
+            <div class="aa-step-circle"><i class="fa-solid fa-film"></i></div>
+            <span>1. Upload Videos</span>
+          </div>
+          <div class="aa-step-connector"></div>
+          <div class="aa-step" data-step="2" id="step-indicator-2">
+            <div class="aa-step-circle"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+            <span>2. Cấu hình & Content</span>
+          </div>
+          <div class="aa-step-connector"></div>
+          <div class="aa-step" data-step="3" id="step-indicator-3">
+            <div class="aa-step-circle"><i class="fa-solid fa-eye"></i></div>
+            <span>3. Preview</span>
+          </div>
+          <div class="aa-step-connector"></div>
+          <div class="aa-step" data-step="4" id="step-indicator-4">
+            <div class="aa-step-circle"><i class="fa-solid fa-rocket"></i></div>
+            <span>4. Launch</span>
+          </div>
+        </div>
+
+        <!-- ═══ STEP 1: Upload Videos ═══ -->
+        <div class="aa-panel active" id="panel-step-1">
+          <div class="aa-panel-header">
+            <div class="aa-panel-icon s1"><i class="fa-solid fa-film"></i></div>
+            <div>
+              <h2>Bước 1 — Upload Videos</h2>
+              <p>Mỗi video = 1 Ad Set riêng biệt nằm trong cùng 1 Campaign</p>
+            </div>
+          </div>
+
+          <!-- Drop Zone -->
+          <div class="video-dropzone" id="video-dropzone">
+            <div class="dropzone-inner" id="dropzone-inner">
+              <i class="fa-solid fa-film dropzone-icon"></i>
+              <p class="dropzone-title">Kéo thả <strong>nhiều videos</strong> vào đây hoặc click để chọn</p>
+              <p class="dropzone-sub">MP4, MOV, AVI — Tối đa 4GB mỗi file · Nhiều file cùng lúc</p>
+              <div class="dropzone-hint">
+                <i class="fa-solid fa-circle-info"></i>
+                <span>Số video = số Ad Set được tạo trong Campaign này</span>
+              </div>
+              <input type="file" id="video-file-input" accept="video/*" multiple hidden>
+              <button class="btn-primary" style="margin-top:1rem" onclick="document.getElementById('video-file-input').click()">
+                <i class="fa-solid fa-folder-open"></i> Chọn Videos
+              </button>
+            </div>
+            <!-- Preview list (after selection) -->
+            <div class="video-preview-list" id="video-preview-list" style="display:none"></div>
+          </div>
+
+          <!-- Campaign meta fields -->
+          <div class="aa-fields-grid">
+            <div class="form-group">
+              <label><i class="fa-solid fa-hashtag" style="color:#facc15"></i> Mã MKT</label>
+              <input type="text" id="f-mkt" placeholder="vd. mkmonth">
+            </div>
+            <div class="form-group">
+              <label><i class="fa-solid fa-box" style="color:#f97316"></i> Mã hàng</label>
+              <input type="text" id="f-product" placeholder="vd. camrider">
+            </div>
+            <div class="form-group">
+              <label><i class="fa-solid fa-tag" style="color:#a855f7"></i> Tag chiến dịch</label>
+              <input type="text" id="f-tag" placeholder="vd. ngày 1902">
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-top:.5rem">
+            <label><i class="fa-solid fa-flag" style="color:#22c55e"></i> Tên Campaign <small style="font-weight:400;color:var(--text-muted)">(tự động điền từ các trường trên)</small></label>
+            <div class="campaign-name-row">
+              <input type="text" id="f-campaign-name" placeholder="VD: [mkmonth] camrider – ngày 1902" style="flex:1">
+              <button class="btn-ghost-sm" id="btn-auto-name"><i class="fa-solid fa-magic"></i> Tự động</button>
+            </div>
+          </div>
+
+          <!-- Start date & Page -->
+          <div class="aa-fields-grid" style="margin-top:.5rem">
+            <div class="form-group">
+              <label><i class="fa-regular fa-calendar" style="color:#60a5fa"></i> Hẹn ngày bắt đầu chạy</label>
+              <input type="datetime-local" id="f-start-date">
+              <small>Để trống = chạy ngay lập tức sau khi đăng</small>
+            </div>
+            <div class="form-group">
+              <label><i class="fa-brands fa-facebook" style="color:#1877f2"></i> Page</label>
+              <select id="f-page-select">
+                <option value="">-- Chọn Page --</option>
+              </select>
+              <small>Kết nối Facebook để lấy danh sách Pages</small>
+            </div>
+            <div class="form-group">
+              <label><i class="fa-solid fa-link" style="color:#22c55e"></i> Link Landing Page</label>
+              <input type="url" id="f-landing-url" placeholder="https://yoursite.com">
+            </div>
+          </div>
+
+          <!-- Product description -->
+          <div class="form-group" style="margin-top:.5rem">
+            <label><i class="fa-solid fa-align-left" style="color:#facc15"></i> Mô tả sản phẩm <small style="font-weight:400;color:var(--text-muted)">(AI sẽ dùng đây để viết text)</small></label>
+            <textarea id="f-product-desc" rows="4" placeholder="Nhập mô tả sản phẩm hoặc câu mút bạn muốn dùng để AI tối ưu từ đó Landing Page..."></textarea>
+          </div>
+
+          <div class="panel-nav-footer">
+            <div></div>
+            <button class="btn-primary" id="btn-step1-next"><i class="fa-solid fa-arrow-right"></i> Tiếp theo: Cấu hình & Content</button>
+          </div>
+        </div>
+
+        <!-- ═══ STEP 2: Config & Content ═══ -->
+        <div class="aa-panel" id="panel-step-2">
+          <div class="aa-panel-header">
+            <div class="aa-panel-icon s2"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+            <div>
+              <h2>Bước 2 — Cấu hình & Generate Content</h2>
+              <p>Thiết lập tài khoản, nhắm mục tiêu và tạo nội dung quảng cáo</p>
+            </div>
+          </div>
+
+          <!-- Account Config -->
+          <div class="section-block">
+            <div class="section-block-title"><i class="fa-solid fa-server"></i> Tài khoản & Tracking</div>
+            <div class="aa-fields-grid">
+              <div class="form-group">
+                <label>Ad Account <span class="req">*</span></label>
+                <select id="f-ad-account">
+                  <option value="">-- Chọn Ad Account --</option>
+                </select>
+                <small>Kết nối Facebook để lấy danh sách</small>
+              </div>
+              <div class="form-group">
+                <label>Pixel ID <span class="req">*</span></label>
+                <select id="f-pixel">
+                  <option value="">-- Chọn Pixel --</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Sự kiện tối ưu</label>
+                <select id="f-opt-event">
+                  <option value="PURCHASE" selected>🛒 Purchase</option>
+                  <option value="INITIATE_CHECKOUT">Initiate Checkout</option>
+                  <option value="ADD_TO_CART">Add to Cart</option>
+                  <option value="LEAD">Lead</option>
+                  <option value="VIEW_CONTENT">View Content</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Budget & Bidding -->
+          <div class="section-block">
+            <div class="section-block-title"><i class="fa-solid fa-dollar-sign"></i> Ngân sách & Đặt giá thầu</div>
+            <div class="aa-fields-grid">
+              <div class="form-group">
+                <label>Ngân sách / ngày (USD) <span class="req">*</span></label>
+                <div class="input-pfx-row"><span class="pfx">$</span><input type="number" id="f-budget" value="10" min="1" step="0.5"></div>
+              </div>
+              <div class="form-group">
+                <label>Chiến lược giá thầu</label>
+                <select id="f-bid-strategy">
+                  <option value="LOWEST_COST_WITHOUT_CAP" selected>Lowest Cost (Tự động)</option>
+                  <option value="COST_CAP">Cost Cap</option>
+                  <option value="BID_CAP">Bid Cap</option>
+                  <option value="MINIMUM_ROAS">Minimum ROAS</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Mục tiêu Campaign</label>
+                <select id="f-objective">
+                  <option value="OUTCOME_SALES" selected>🛒 Sales</option>
+                  <option value="OUTCOME_LEADS">📋 Leads</option>
+                  <option value="OUTCOME_TRAFFIC">🌐 Traffic</option>
+                  <option value="OUTCOME_AWARENESS">📣 Awareness</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Targeting -->
+          <div class="section-block">
+            <div class="section-block-title"><i class="fa-solid fa-crosshairs"></i> Nhắm mục tiêu</div>
+            <div class="aa-fields-grid">
+              <div class="form-group">
+                <label>Quốc gia <span class="req">*</span></label>
+                <select id="f-country" multiple size="4">
+                  <option value="PH" selected>🇵🇭 Philippines</option>
+                  <option value="VN">🇻🇳 Việt Nam</option>
+                  <option value="ID">🇮🇩 Indonesia</option>
+                  <option value="TH">🇹🇭 Thailand</option>
+                  <option value="MY">🇲🇾 Malaysia</option>
+                  <option value="SG">🇸🇬 Singapore</option>
+                  <option value="US">🇺🇸 United States</option>
+                  <option value="GB">🇬🇧 United Kingdom</option>
+                </select>
+                <small>Giữ Ctrl để chọn nhiều</small>
+              </div>
+              <div>
+                <div class="form-group">
+                  <label>Độ tuổi</label>
+                  <div style="display:flex;align-items:center;gap:.5rem">
+                    <input type="number" id="f-age-min" value="18" min="18" max="65" style="width:70px;text-align:center">
+                    <span style="color:var(--text-muted)">—</span>
+                    <input type="number" id="f-age-max" value="45" min="18" max="65" style="width:70px;text-align:center">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label>Giới tính</label>
+                  <div class="gender-opts">
+                    <label class="radio-chip"><input type="radio" name="gender" value="ALL" checked> Tất cả</label>
+                    <label class="radio-chip"><input type="radio" name="gender" value="MALE"> Nam</label>
+                    <label class="radio-chip"><input type="radio" name="gender" value="FEMALE"> Nữ</label>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Placements</label>
+                <div class="checkbox-stack">
+                  <label class="check-chip"><input type="checkbox" name="placement" value="FEED" checked> Facebook Feed</label>
+                  <label class="check-chip"><input type="checkbox" name="placement" value="REELS" checked> Reels</label>
+                  <label class="check-chip"><input type="checkbox" name="placement" value="STORY" checked> Stories</label>
+                  <label class="check-chip"><input type="checkbox" name="placement" value="IG_FEED"> Instagram Feed</label>
+                  <label class="check-chip"><input type="checkbox" name="placement" value="IG_STORY"> Instagram Story</label>
+                  <label class="check-chip"><input type="checkbox" name="placement" value="AN"> Audience Network</label>
+                </div>
+              </div>
+            </div>
+            <div class="form-group" style="margin-top:.5rem">
+              <label>Sở thích / Interests <small style="font-weight:400;color:var(--text-muted)">(mỗi dòng 1 mục)</small></label>
+              <textarea id="f-interests" rows="3" placeholder="Online shopping&#10;Beauty and personal care&#10;Home improvement"></textarea>
+            </div>
+          </div>
+
+          <!-- Content / Copy -->
+          <div class="section-block">
+            <div class="section-block-title"><i class="fa-solid fa-pen-nib"></i> Nội dung quảng cáo (Ad Copy)</div>
+
+            <!-- AI Content Formulas -->
+            <div class="content-formulas">
+              <div class="formula-label"><i class="fa-solid fa-robot"></i> Content Formula — Chọn cấu trúc AI viết:</div>
+              <div class="formula-tabs" id="formula-tabs">
+                <button class="formula-tab active" data-formula="long-form">Long-form FB (PH)</button>
+                <button class="formula-tab" data-formula="short-form">Short-form</button>
+                <button class="formula-tab" data-formula="review">Review Style</button>
+                <button class="formula-tab" data-formula="problem-solution">Problem/Solution</button>
+                <button class="formula-tab" data-formula="custom">Custom</button>
+              </div>
+              <div class="formula-description" id="formula-description"></div>
+            </div>
+
+            <div class="form-group">
+              <label>Primary Text <span class="req">*</span></label>
+              <textarea id="f-primary-text" rows="6" placeholder="Nhập nội dung hoặc nhấn 'Generate' để AI tạo tự động từ mô tả sản phẩm..."></textarea>
+              <div class="copy-actions">
+                <button class="btn-ghost-sm" id="btn-generate-copy"><i class="fa-solid fa-wand-magic-sparkles"></i> Generate AI</button>
+                <span id="copy-char-count" class="char-count">0 ký tự</span>
+              </div>
+            </div>
+            <div class="aa-fields-grid" style="margin-top:.25rem">
+              <div class="form-group">
+                <label>Headline</label>
+                <input type="text" id="f-headline" placeholder="Tiêu đề quảng cáo" maxlength="40">
+                <small><span id="hl-count">0</span>/40 ký tự</small>
+              </div>
+              <div class="form-group">
+                <label>CTA Button</label>
+                <select id="f-cta">
+                  <option value="SHOP_NOW">🛒 Shop Now</option>
+                  <option value="LEARN_MORE">🔗 Learn More</option>
+                  <option value="ORDER_NOW">📦 Order Now</option>
+                  <option value="GET_OFFER">🎁 Get Offer</option>
+                  <option value="BUY_NOW">💳 Buy Now</option>
+                  <option value="SIGN_UP">📝 Sign Up</option>
+                  <option value="CONTACT_US">💬 Contact Us</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel-nav-footer">
+            <button class="btn-ghost" id="btn-step2-back"><i class="fa-solid fa-arrow-left"></i> Quay lại</button>
+            <button class="btn-primary" id="btn-step2-next"><i class="fa-solid fa-eye"></i> Xem trước</button>
+          </div>
+        </div>
+
+        <!-- ═══ STEP 3: Preview ═══ -->
+        <div class="aa-panel" id="panel-step-3">
+          <div class="aa-panel-header">
+            <div class="aa-panel-icon s3"><i class="fa-solid fa-eye"></i></div>
+            <div>
+              <h2>Bước 3 — Preview Campaign</h2>
+              <p>Kiểm tra lại toàn bộ cấu hình trước khi phát sóng</p>
+            </div>
+          </div>
+
+          <!-- Summary -->
+          <div class="preview-summary-grid" id="preview-summary-grid">
+            <!-- Built by JS -->
+          </div>
+
+          <!-- Ad Previews -->
+          <div class="section-block-title" style="margin:1.5rem 0 1rem"><i class="fa-solid fa-rectangle-ad"></i> Xem trước từng Ad ({n} Ad Sets)</div>
+          <div class="ad-preview-list" id="ad-preview-list">
+            <!-- Built by JS -->
+          </div>
+
+          <!-- Upload status -->
+          <div class="upload-status-box" id="upload-status-box" style="display:none">
+            <div class="upload-status-header"><i class="fa-solid fa-cloud-arrow-up"></i> Đang upload video lên Meta...</div>
+            <div class="upload-progress-list" id="upload-progress-list"></div>
+          </div>
+
+          <div class="panel-nav-footer">
+            <button class="btn-ghost" id="btn-step3-back"><i class="fa-solid fa-arrow-left"></i> Chỉnh sửa</button>
+            <button class="btn-launch" id="btn-step3-next"><i class="fa-solid fa-rocket"></i> Upload & Launch Campaign</button>
+          </div>
+        </div>
+
+        <!-- ═══ STEP 4: Launch / Result ═══ -->
+        <div class="aa-panel" id="panel-step-4">
+          <div class="launch-result" id="launch-result">
+            <!-- Built by JS -->
+          </div>
+        </div>
+
+      </div><!-- /tab-campaign -->
+
+      <!-- History Tab -->
+      <div class="aa-tab-panel" id="tab-history">
+        <div class="history-toolbar">
+          <span style="font-weight:700;font-size:1rem">Lịch sử Campaign đã tạo</span>
+          <button class="btn-ghost-sm danger-btn" id="btn-clear-history"><i class="fa-solid fa-trash"></i> Xóa lịch sử</button>
+        </div>
+        <div id="history-list-container">
+          <div class="empty-state"><i class="fa-solid fa-clock-rotate-left" style="font-size:2rem;margin-bottom:.75rem;color:var(--text-muted)"></i><p>Chưa có lịch sử nào</p></div>
+        </div>
+      </div>
+
+    </div><!-- /workspace -->
+  </main>
+</div>
+
+<!-- ═══ MODALS ═══ -->
+
+<!-- Facebook Login / App ID Modal -->
+<div class="modal" id="modal-api">
+  <div class="modal-content modal-wide">
+    <span class="close-btn" id="close-modal-api">&times;</span>
+    <h2><i class="fa-brands fa-facebook" style="color:#1877f2"></i> Kết nối tài khoản Facebook</h2>
+
+    <!-- Step 1: Enter App ID -->
+    <div id="modal-step-appid">
+      <div class="cfg-notice" style="margin-bottom:1.5rem">
+        <i class="fa-solid fa-circle-info"></i>
+        <div>
+          Cần tạo <strong>Facebook App</strong> (miễn phí) để đăng nhập. Làm 1 lần duy nhất:<br>
+          1. Vào <a href="https://developers.facebook.com/apps/" target="_blank">developers.facebook.com/apps</a> → <strong>Create App</strong><br>
+          2. Chọn loại <strong>Business</strong> → Điền tên app → Create<br>
+          3. Vào <strong>Settings → Basic</strong> → Copy <strong>App ID</strong><br>
+          4. Vào <strong>Facebook Login → Settings</strong> → Thêm <code>http://localhost:3000</code> vào Valid OAuth Redirect URIs
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Facebook App ID <span class="req">*</span></label>
+        <input type="text" id="cfg-app-id" placeholder="1234567890123456" style="font-size:1.1rem;font-weight:700;letter-spacing:1px">
+        <small>Lấy tại Facebook Developers → Your App → Settings → Basic → App ID</small>
+      </div>
+
+      <div class="form-group">
+        <label>API Version</label>
+        <select id="cfg-api-version">
+          <option value="v22.0" selected>v22.0 (mới nhất)</option>
+          <option value="v21.0">v21.0</option>
+          <option value="v20.0">v20.0</option>
+        </select>
+      </div>
+
+      <div class="cfg-notice" style="background:rgba(250,204,21,.07);border-color:rgba(250,204,21,.2);margin-bottom:1.25rem">
+        <i class="fa-solid fa-triangle-exclamation" style="color:#facc15"></i>
+        <div>Tool phải chạy qua <strong>http://localhost:3000</strong> (không phải file:///) để Facebook Login hoạt động.
+        Nhấn đúp vào file <strong>start-server.bat</strong> trong thư mục SoraTools để khởi động.</div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-ghost" id="btn-cancel-api">Hủy</button>
+        <button class="btn-primary" id="btn-init-fb-sdk"><i class="fa-brands fa-facebook"></i> Xác nhận & Đăng nhập Facebook</button>
+      </div>
+    </div>
+
+    <!-- Step 2: FB Login success info -->
+    <div id="modal-step-loggedin" style="display:none">
+      <div style="text-align:center;padding:1.5rem 0">
+        <div style="font-size:3.5rem;margin-bottom:.75rem">✅</div>
+        <h3 style="margin-bottom:.35rem" id="fb-logged-name">Đang tải...</h3>
+        <p style="color:var(--text-muted);font-size:.85rem" id="fb-logged-info"></p>
+      </div>
+      <div id="fb-accounts-preview" style="margin-bottom:1.25rem"></div>
+      <div class="modal-actions">
+        <button class="btn-ghost" id="btn-fb-switch-account"><i class="fa-solid fa-rotate"></i> Đổi tài khoản</button>
+        <button class="btn-primary" id="btn-fb-confirm-login"><i class="fa-solid fa-check"></i> Sử dụng tài khoản này</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="ads-automation.js"></script>
+</body>
+</html>

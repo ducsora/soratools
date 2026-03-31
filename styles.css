@@ -719,6 +719,28 @@ body {
     color: #fbbf24 !important;
 }
 
+.nav-item-bulk {
+    background: linear-gradient(135deg, rgba(34,197,94,0.08), rgba(16,185,129,0.06));
+    border: 1px solid rgba(34,197,94,0.15);
+}
+.nav-item-bulk i { color: #22c55e; }
+.nav-item-bulk:hover, .nav-item-bulk.active {
+    background: rgba(34,197,94,0.14) !important;
+    border-color: rgba(34,197,94,0.3) !important;
+    color: #4ade80 !important;
+}
+
+.nav-item-automation {
+    background: linear-gradient(135deg, rgba(250,204,21,0.1), rgba(249,115,22,0.07));
+    border: 1px solid rgba(250,204,21,0.2);
+}
+.nav-item-automation i { color: #facc15; }
+.nav-item-automation:hover, .nav-item-automation.active {
+    background: rgba(250,204,21,0.16) !important;
+    border-color: rgba(250,204,21,0.35) !important;
+    color: #facc15 !important;
+}
+
 /* =============== Global Button Utilities =============== */
 .btn-ghost {
     background: none;
